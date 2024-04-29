@@ -1,0 +1,1544 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[all]{xy}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+
+\SelectTips{eu}{}
+\setlength{\fboxsep}{0pt}
+\setlength\parskip{0.3em}
+\setlength{\parindent}{0 pt}
+
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\stab}{\text{stab}}
+\newcommand{\gal}{\text{Gal}}
+\newcommand{\Aut}{\text{Aut}}
+\newcommand{\emb}{\text{Emb}}
+\newcommand{\ev}{\text{ev}_\alpha}
+\newcommand{\Ker}{\text{Ker }}
+\newcommand{\Char}{\text{char\,}}
+\newcommand{\adj}{\text{adj}\ }
+\newcommand{\lcm}{\text{lcm}\ }
+\newcommand{\id}{\text{id}}
+\newcommand{\im}{\text{im\,}}
+\newcommand{\spanset}{\text{span}}
+\newcommand{\rank}{\text{rank }}
+\newcommand{\Mod}{\text{ mod }}
+
+\theoremstyle{definition}
+
+\newtheorem{defn}{Definition}[subsection]
+\newtheorem{prop}[defn]{Proposition}
+\newtheorem{thm}[defn]{Theorem}
+\newtheorem{lemma}[defn]{Lemma}
+\newtheorem{coro}[defn]{Corollary}
+\newtheorem{example}[defn]{Example}
+\newtheorem{idea}[defn]{Big idea}
+\newtheorem*{remark}{Remark}
+\newtheorem*{notation}{Notation}
+
+\title{MA3D5 Galois theory :: Lecture notes}
+\author{Lecturer: Gavin Brown}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+\begin{flushright}
+\textit{Week 1, lecture 1: a mixture of review and teaser, giving the essential idea behind how Galois showed quintic was not solvable}
+
+\textit{Week 1, lecture 2 starts here}
+\end{flushright}
+\section{Field extension}
+\begin{defn}
+$\varphi:K\rightarrow L$ where $K,L$ fields is a \textit{(field) homomorphism} if it is a ring homomorphism.
+\end{defn}
+\begin{prop}
+\label{prop:fieldhomisinj}
+Let $\varphi:K\rightarrow L$ be a homomorphism. Then $\varphi$ is injective.
+\end{prop}
+\begin{proof}
+Suppose $a,b\in K:\varphi(a)=\varphi(b)$. Then $\varphi(a-b)=\varphi(a)-\varphi(b)=0$. It then suffices to prove that the only element $c\in K:\varphi(c)=0$ is $c=0$. Suppose $c\neq 0$. Then $c^{-1}\in K$ and $\varphi(c)\varphi(c^{-1})=\varphi(cc^{-1})=\varphi(1)=1$, so $\varphi(c)\neq 0$, a contradiction.
+\end{proof}
+\begin{defn}
+A \textit{field extension} is a (ring) homomorphism $\varphi:K\rightarrow L$, denoted $L/K$.
+\end{defn}
+\begin{remark}
+\begin{enumerate}
+\item Any subfield $K\subset L$ gives a field extension $L/K$.
+\item If $\varphi:K\rightarrow L$, then it is injective by above, and we can write $\varphi:K\rightarrow K'=\varphi(K)\subset L$. So if we are not given a inclusion map, then $K$ and $K'$ are basically the same field (they are certainly isomorphic), and $K'$ is just a copy of $K$ sitting somehow inside $L$. Mostly we simply think of $L/K$ as $K\subset L$.
+\end{enumerate}
+\end{remark}
+\subsection{Field extensions as vector spaces}
+\begin{prop}
+Let $L/K$ be a field extension. Then $L$ is a vector space over $K$, or $K$-vector space.
+\end{prop}
+If we want to do scalar multiplication, i.e. multiply an element in $L$ by an element $\lambda$ in $K$, we just use $\varphi$ to bring $\lambda$ to $K'$, consistent with remark above.
+\begin{defn}
+The \textit{degree} of $L/K$, denoted $[L:K]$, is the dimension of $L$ as a $K$-vector space. $L/K$ is a \textit{finite extension} if $[L:K]$ is finite. Otherwise, it's an \textit{infinite extension}.
+\end{defn}
+Note that if $[L:K]=1$ then $L=K$.
+\begin{thm}[Tower law]
+If $M/L$ and $L/K$ are field extensions, then $M/K$ is an extension, and if both $M/L$ and $L/K$ are finite, then
+\[
+[M:K]=[M:L][L:K].
+\]
+If either is infinite then so is $M/K$.
+\end{thm}
+\begin{proof}[Proof sketch]
+Let $a_1,\ldots ,a_n\in L$ be a basis of $L$ as a $K$-vector space, and $b_1,\ldots ,b_m\in M$ be a basis of $M$ as a $L$-vector space. It suffices to prove that
+\[
+\{a_i b_j\in M:1\leq i\leq n,\ 1\leq j\leq m\}
+\]
+is a basis of $M$ as a $K$-vector space.
+\end{proof}
+\begin{defn}
+If $K\subset L\subset M$, then $L$ is an \textit{intermediate field} of $M/K$.
+\end{defn}
+
+\subsection{Adjoining a square root to a subfield of $\C$}
+Suppose $s\in K$ is not a square in $K$. Choose $K\not\ni\alpha=\sqrt{s}\in\C$. Define $K(\alpha)$ to be the smallest subfield of $\C$ that contains $K$ and $\alpha$. Formally, it's
+\[
+\left\{\frac{p(\alpha)}{q(\alpha)}:p,q\in K[x],\ q(\alpha)\neq 0\right\}.
+\]
+Consider any $\displaystyle \xi=\frac{p(\alpha)}{q(\alpha)}\in K(\alpha)$. If we see $\alpha^2$ we replace by $s$, $\alpha^3$ by $\alpha s$, $\alpha^4$ by $s^2$ and so on, i.e. there won't be $\alpha$ of degree higher than 1, i.e. $\displaystyle \exists a,b,c,d\in K:\xi=\frac{a+b\alpha}{c+d\alpha}$ where $c+d\alpha\neq 0$. So
+\[
+\xi = \frac{a+b\alpha}{c+d\alpha}\frac{c-d\alpha}{c-d\alpha}=\frac{ac-bds}{c^2-d^2s}+\frac{bc-ad}{c^2-d^2s},
+\]
+which tells us that $1,\alpha$ span $K(\alpha)$, and of course they are linearly independent since if $e+f\alpha=0$ where $e,f\in K$ then $e=f=0$ since otherwise it would mean that $\alpha\in K$ which is assumed at first to be false. One concludes that $[K(\alpha):K]=2$.
+
+\begin{flushright}
+\textit{Week 2, lecture 1 starts here}
+\end{flushright}
+
+\section{A brief review}
+3 things first:
+\begin{enumerate}
+\item Consider the (principal) ideal $(f)=\{fg:g\in\R[x]\}$ and the quotient ring $\R[x]/(f)=\{g+(f):g\in\R[x]\}$. (\textbf{The golden rule:} $g_1+(f)=g_2+(f)\Leftrightarrow g_1-g_2\in (f)$. When we lazily omit `$+(f)$' and simply write $g$ in place of $g+(f)$, we must remember that two polynomials $g_1,g_2$ define exactly the same element of quotient ring $\R[x]/(f)$ iff $g_1-g_2\in (f)$, i.e. $g_2=g_1+hf$ where $h\in \R[x]$.
+
+Consider $f=x^2+1\in\R[x]$ and let $g=x^3+2x^2+3$. Then $g+(f)\in\R[x]/(f)$, and add, subtract $g$ by multiple of $f$ won't change the coset, and note $x^3+2x^2+3-x(x^2+1)-2(x^2+1)=1-x$. Now let $g=x^2$ then $g=g-f=-1$.
+
+$\R[x]/(f)$ in this case is $\cong \C$.
+\begin{proof}
+Let $\varphi:\R[x]\rightarrow \C$ be defined by $x\mapsto i$. This is surjective since $\varphi(ax+b)=ai+b$. We claim $\ker \varphi =(x^2+1)$.
+
+Clearly $x^2+1\in\ker\varphi$ since $\varphi(x^2+1)=\varphi(x)^2+1=i^2+1=0$, so $(f)\subseteq \ker\varphi$.
+
+If $g\in\ker\varphi$, apply division algorithm:
+\begin{flushright}
+given $f,g\in K[x]$ where $K$ field, $\exists! q,r\in K[x]:f=gq+r$ where $\deg r<\deg g$
+\end{flushright}
+$\exists h,r\in\R[x]:g=fh+r$ and $\deg r<\deg f=2$, so we can write $r=ax+b$. Then $\varphi(g)=0=\varphi(f)\varphi(h)+\varphi(r)=\varphi(r)=ai+b \Leftrightarrow a=b=0$. So $g=fh\in (f)$, hence $\ker\varphi \subseteq (f)$.
+
+This desired then follows by the first isomorphism theorem.
+\end{proof}
+
+\item \textbf{Easier context.} Let $K$ be a field, then $\exists!$ ring homomorphism $\varphi:\Z\rightarrow K$. We can agree that either
+\begin{enumerate}
+\item $\ker \varphi=(0)=\{0\}$ (we say $K$ has characteristic 0, denoted $\Char K=0$) and $\Q\subset K$ or
+\item $\ker\varphi =(n)=n\Z$ for some $n>0$, then $n$ must be prime $p$, and $\Char K=p$ and $\Z/p\Z \subset K$
+\end{enumerate}
+and it can't be that both are true and the $p$ in (b) is unique, e.g. $K=\Q(\sqrt 2)\supset \Q$ so $\Char K=0$ and $K=\mathbb F_7(t)\supset \mathbb F_7$ so $\Char K=7$.
+
+\textbf{Sanity check.} \begin{enumerate}
+\item If $\frac{a}{b}\in\Q$, define $\varphi\left(\frac{a}{b}\right)=\frac{\varphi (a)}{\varphi(b)}$. Since $b\neq 0$, $\varphi(b)\neq 0$. Now
+\[
+\varphi\left(\frac{a}{b}\right)=\varphi\left(\frac{c}{d}\right)\Rightarrow\varphi(ad-bc)=0\Rightarrow ad-bc=0\Rightarrow \frac{a}{b}=\frac{c}{d},
+\]
+so injective.
+\item If $n=pq$ then $0=\varphi(n)=\varphi(p)\varphi(q)$ but $\varphi(p),\varphi(q)\neq 0$ since $p,q<n$, so $n$ must be prime.
+\end{enumerate}
+
+\item Let $K$ be a field and $f\in K[x]$ monic of degree $d$. \textbf{Motto:} working in $K[x]/(f)$ is the same as working in $K[x]_{<d}$ and letting $f=0$ wherever required (or equivalently, using $f$ to substitute $x^d=-a_{d-1}x^{d-1}-\cdots-a_1x-a_0$ wherever multiplication results in degree $\geq d$). The point is, considering division algorithm, working in $\mathbb K[x]/(f)$ is the same as working with the remainder $r$.
+\end{enumerate}
+
+\begin{flushright}
+\textit{Week 2, lecture 2 starts here (Matteo takes over)}
+\end{flushright}
+
+\section{Quadratic and cubic formula}
+\subsection{Quadratic}
+Consider $x^2+ax+b$. To find the root we Babylonian it: let $x=y-\frac{a}{2}$, then
+\[
+\left(y-\frac{a}{2}\right)^2+a\left(y-\frac{a}{2}\right)+b=0
+\]
+which gives $y^2-c=0$ where $c$ is the discriminant $\frac{a^2-4b}{4}$ and $y=\pm\sqrt c$.
+
+\subsection{Cubic}
+\label{sec:cubic}
+Now consider $x^3+ax^2+bx+c$. We do a similar thing: let $x=y-\frac{a}{3}$ (complete the cube) and
+\[
+\left(y-\frac{a}{3}\right)^3+a\left(y-\frac{a}{3}\right)^2+b\left(y-\frac{a}{3}\right)+c
+\]
+gives
+\[
+y^3+px+q\text{ where }p=-\frac{a^3}{3}+b,\ q=\frac{2a^3}{27}-\frac{ab}{3}+c.
+\]
+Now let $y=z-\frac{p}{3z}$, we get $z^6+qz^3-\frac{p^3}{27}$ and it's a quadratic in the variable $z^3$, so we have
+\[
+z^3=\frac{-q\pm \sqrt{q^2+\frac{4p^3}{27}}}{2},
+\]
+We then let discriminant $D:=q^2+\frac{4p^3}{27}$ and we let $\alpha=:\sqrt D$, and $\beta=\sqrt[3]{\frac{-q+\alpha}{2}},\ \gamma=\sqrt[3]{\frac{-q-\alpha}{2}}$ are two candidates of roots. Note
+\[
+(\beta\gamma)^3=\left(\frac{-q+\alpha}{2}\right)\left(\frac{-q-\alpha}{2}\right)=\frac14 (q^2-\alpha^2)=\frac14 \left(q^2-\left(q^2+\frac{4p^3}{27}\right)\right)=\left(-\frac{p}{3}\right)^3,
+\]
+so by choosing $\beta,\gamma$ as the roots, $\beta\gamma=-\frac{p}{3}$. Also, if we multiply $z$ on both sides of the substitution formula,
+\[
+z^2-yz-\frac{p}{3},
+\]
+this is a quadratic and we know $y=\beta+\gamma$ and $-\frac{p}{3}=\beta\gamma$ by Vieta's.
+
+We now claim $\beta+\gamma,\ \omega\beta+\omega^2\gamma,\ \omega^2\beta+\omega\gamma$ where $\omega$ is the cubic root of unity are the three roots. By plugging them in we can verify. To write them explicitly,
+\[
+y_i=\omega^i \sqrt[3]{\frac{-q+\sqrt{q^2+\frac{4p^3}{27}}}{2}}+w^{3-i} \sqrt[3]{\frac{-q-\sqrt{q^2+\frac{4p^3}{27}}}{2}},
+\]
+and one can then write the formulae in terms of the original $a,b,c$ but that would be too long.
+
+\begin{flushright}
+\textit{Week 2, lecture 3 starts here}
+\end{flushright}
+
+\subsubsection{Real solutions for real cubics}
+As in the context of above and let $p,q\in\R$.
+\begin{enumerate}
+\item When $D=0,\ q^2=-\frac{4p^3}{27} \Rightarrow p<0$. Also $\beta=\gamma=\sqrt[3]{\frac{-q}{2}}$. (Check:$\beta\gamma=\sqrt[3]{\frac{q^2}{4}}=\frac{-p}{3}$) So $y_1=2\beta$ and $y_2=y_3=\beta(\omega+\omega^2)=-\beta$. Note that all roots are real.
+
+e.g. $f=x^3-3x+2$, $x_1=-2,\ x_2=x_3=1$ are roots.
+
+\begin{center}
+\begin{tikzpicture}
+    \begin{axis}[axis x line=middle,axis y line=middle,
+    xtick=\empty,ytick=\empty,
+    xlabel={$x$},ylabel={$f(x)$},
+    samples=1000,
+    xmin=-3,xmax=2,
+    ymin=-0.5,ymax=5]
+    \addplot[domain=-3:2] {x^3-3*x+2};
+    \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\item When $D>0$, $\sqrt D\in\R$ then at least $\beta,\gamma \in\R$ but only $y_1=\beta+\gamma$ is real and $y_2=\omega \beta+\omega^2\gamma,\ y_3=\omega^2\beta+\omega\gamma$ are complex conjugates.
+
+e.g. $f=x^3-3x+3$, $x_1=-2$ is a real root.
+
+\begin{center}
+\begin{tikzpicture}
+    \begin{axis}[axis x line=middle,axis y line=middle,
+    xtick=\empty,ytick=\empty,
+    xlabel={$x$},ylabel={$f(x)$},
+    samples=1000,
+    xmin=-3,xmax=2,
+    ymin=-0.5,ymax=5]
+    \addplot[domain=-3:2] {x^3-3*x+3};
+    \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\item When $D<0$, then $\sqrt D=:\alpha \in \C\backslash\R$. But note that
+\[
+\beta^3=\frac{-q+i|\alpha|}{2},\quad \gamma^3=\frac{-q-i|\alpha|}{2}
+\]
+are conjugates, hence $\beta,\gamma$ are conjugates as well since $\beta\gamma=\frac{-p}{3}$. Now $y_1=\beta+\overline\beta,\ y_2=\omega\beta+\overline{\omega\beta}$ and $y_3=\omega^2\beta+\overline{\omega^2\beta}$ are all reals. The problem is we cannot avoid complex computations during the process (in algebra jargon, this means you need the field extension $\Q(\alpha,\beta,\omega)/\Q$), so people back in the days thought this was bad. (Casus irreducibilis)
+
+e.g. $f=x^3-3x$, $x_1=0,\ x_{2,3}=\pm \sqrt 3$ are roots.
+
+\begin{center}
+\begin{tikzpicture}
+    \begin{axis}[axis x line=middle,axis y line=middle,
+    xtick=\empty,ytick=\empty,
+    xlabel={$x$},ylabel={$f(x)$},
+    samples=1000,
+    xmin=-3,xmax=3,
+    ymin=-2,ymax=3]
+    \addplot[domain=-3:2] {x^3-3*x};
+    \end{axis}
+\end{tikzpicture}
+\end{center}
+\end{enumerate}
+
+\subsubsection{Trigonometric}
+We know
+\[
+\cos 3\theta = 4\cos ^3\theta -3\cos \theta
+\]
+which can be treated as a cubic by letting $y:=\cos \theta$
+\[
+y^3-\frac34 y-\frac14 \cos 3\theta=0
+\]
+and we immediately have solutions $y_1=\cos \theta,\ y_2=\cos \left(\theta+\frac{2\pi}{3}\right),\ y_3=\cos \left(\theta+\frac{4\pi}{3}\right)$.
+
+This can be adapted to solve $y^2+px+q=0$ in general as long as $q\in \left[-\frac14,\frac14\right]$.
+
+\begin{flushright}
+\textit{Week 3, lecture 1 starts here}
+\end{flushright}
+
+\section{Factorisation}
+Recall that a field $K$ gives a UFD $K[x]$, i.e. a commutative ring with no zero divisors and every element in which can be uniquely written as a product of irreducible elements up to reordering and multiplication by units. $f\in K[x]$ is \textit{reducible} if $\deg f>0$ and $\exists g,h\in K[x]:\deg g,h>0$ and $f=gh$.
+
+The question of whether $f\in K[x]$ is irreducible is generally really hard (and depends on $K$).
+\subsection{Roots}
+\begin{defn}
+$\alpha\in K$ is a \textit{root} of $f\in K[x]$ if $f(\alpha)=0\in K$.
+\end{defn}
+
+\begin{coro}
+The following are equivalent:
+\begin{enumerate}
+\item $\alpha$ is a root of $f$
+\item $(x-\alpha) \mid f$
+\item $\exists g\in K[x]:f=(x-\alpha)g$ ($g$ can be constant)
+\end{enumerate}
+\end{coro}
+
+\begin{proof}
+2 and 3 are equivalent by definition.
+\begin{itemize}
+\item[$3\Rightarrow 1$:] $f(x)=(x-\alpha)g(x)$ so $f(\alpha)=(\alpha-\alpha)g(\alpha)=0\cdot g(\alpha)=0$.
+\item[$1\Rightarrow 3$:] Since $K[x]$ is a UFD we can do Euclidean division, i.e. $\exists g,r\in K[x]:f(x)=(x-\alpha)g(x)+r(x)$ where $\deg r<\deg x-\alpha=1$, so $r\in K$. Since $0=f(\alpha)=r(x)$, one has what's desired.
+\end{itemize}
+\end{proof}
+
+\begin{remark}
+Being reducible is not equivalent to having a root, e.g. $x^4+3x^2+2\in\Q[x]$ is reducible to $(x^2+1)(x^2+2)$ but has no roots. This is only true when we are in an algebraically closed field (e.g. $\C$) or $\deg f\leq 3$ so that when it's reduced we are guaranteed to have a linear term.
+\end{remark}
+\subsection{$\C[x]$ vs $\Q[x]$}
+\begin{thm}[Fundamental theorem of algebra]
+Any $f\in\C[x]$ factorises into linear factors:
+\[
+f=c(x-\alpha_1)\cdots (x-\alpha_n)
+\]
+where $n=\deg f$ and $\alpha_i\in \C$.
+\end{thm}
+This does not hold in $\Q[x]$, e.g. $x^2+1$. So in terms of factorisation, $\Q[x]$ is harder to work with. To make the situation better we go in $\Z[x]$. Clearly $\Z$ is not a field but still $\pm 1\in\Z[x]$ and it's a UFD (not a PID), so conclusions about factorisations apply.
+
+\begin{lemma}[Gauss']
+Let $f=a_m x^m +\cdots+a_0\in\Z[x]$ suppose $\gcd (a_0,\ldots,a_m)=1$ (\textit{primitive}). If $f=gh$ where $g,h\in\Q[x],\ \deg g,h>1$ then $\exists b\in\Q^\ast:bg,b^{-1}h\in\Z[x]$.
+\end{lemma}
+This is just common sense: one can clear denominators of quotients to get integers (let's still do a proof later though). The real punchline of the lemma is:
+
+\begin{coro}
+If $f$ is irreducible in $\Z[x]$ then it's irreducible in $\Q[x]$.
+\end{coro}
+
+\begin{flushright}
+\textit{Week 3, lecture 2 starts here}
+\end{flushright}
+
+\begin{remark}
+We didn't define irreducibility in $\Z[x]$ since $\Z$ is not a field. But note that a non-1 $n\in\Z$ is not a unit in $\Z[x]$, so we consider it as irreducible. Hence the assumption that $f$ is irreducible in $\Z[x]$ implies $f$ is primitive since if we can factor out a non-1 integer then it's reducible. It's only because of this that we can apply Gauss' lemma.
+\end{remark}
+
+\subsection{$\Z[x]$}
+\subsubsection{Rational root test}
+Recall that if $f\in\Q[x]$ with $\deg f=2,3$ is reducible then $f$ has a root in $\Q$.
+\begin{lemma}
+If $f=a_m x^m+\cdots+a_0\in\Z[x]$ and $f(a)=0,\ a\in\Z$ then $a\mid a_0$. 
+\end{lemma}
+\begin{proof}
+One has $f(a)=a_m a^m+\cdots+a_1a+a_0=0$ and $a\mid a_m a^m+\cdots+a_1a,\ a\mid 0$, so $a\mid a_0$.
+\end{proof}
+
+\begin{prop}[Rational root test]
+If $f=a_mx^m+\cdots +a_0\in\Z[x],\ a_m\neq 0$ and $\frac{r}{s}\in\Q$ is a root of $f$, then $r\mid a_0,\ s\mid a_m$.
+\end{prop}
+\begin{proof}
+In $\Q[x]$ one has
+\[
+f(x)=\left(x-\frac{r}{s}\right)g(x).
+\]
+By Gauss'
+\[
+\exists b\in\Q^\times: b(sx-r),\frac{g(x)}{bs}\in\Z[x],
+\]
+which makes the desired obvious.
+\end{proof}
+\begin{example} Is $f=x^3-4x+5$ irreducible in $\Q[x]$? Again $\deg f=3$ so if it's not irreducible (so reducible) then it's of the form $f=gh$ where WLOG $\deg g=1,\ \deg f=2$, so it would have a rational root satisfying rational root test. The only possibility for a root $x_i$ is then $x_i=\pm 1,\ \pm 5$, but $f(x_i)\neq 0 \ \forall i$, hence $f$ is irreducible in $\Q[x]$.
+\end{example}
+
+\subsubsection{Eisenstein's criterion}
+\begin{prop}
+If $f=a_m x^m+\cdots+a_0\in\Z[x]$ and $\exists$ a prime $p\in\Z:p\nmid a_m,\ p\mid a_i \ \forall i=1,\ldots,m-1$ and $p^2\nmid a_0$ (i.e. $f$ is \textit{Eisenstein at prime} $p$) then $f$ is irreducible in $\Z[x]$ (and therefore $\Q[x]$).
+\end{prop}
+
+\begin{flushright}
+\textit{Week 3, lecture 3 starts here}
+\end{flushright}
+
+\begin{proof}
+Suppose $f=gh$ where $g,h\in\Z[x]$ and $\deg g,h>0,\ g=\sum^H b_i x^i,\ h=\sum^k c_i x^i$ (where $H,k<m$). Then $a_0=b_0c_0$. Since $p\mid a_0$, WLOG $p\mid b_0$ and $p\nmid c_0$. Also $a_m=b_Hc_k$, so since $p\nmid a_m,\ p$ does divide all $b_i$. Choose $b_j$ to be the coefficient such that $p\nmid b_j$ and $j$ is minimal. But note that
+\[
+a_j=b_0c_j+b_1c_{j-1}+\cdots+b_jc_0
+\]
+and $p\mid a_j,\ p\mid b_{0,\ldots,j-1},\ p\nmid c_0$, so $p$ must divide $b_j$, a contradiction.
+\end{proof}
+
+\begin{example}
+Is $f=\frac12 x^3+x^2-\frac43 x+\frac59$ irreducible in $\Q[x]$? First one makes it a polynomial in $\Z[x]: 18f=9x^2+18x^2-24x+10.\ p=3$ is not a candidate since $3\mid 9$, and since $18=2\times 3^2$, one can only choose $p=2$. Indeed, $2\nmid 9,\ 2\mid 18,\ 2\mid 24,\ 2\mid 10,\ 4\nmid 10$, so $18f$ is irreducible in $\Z[x]$, so $\Q[x]$, and since $18\in\Q^\ast,\ f$ is irreducible in $\Q[x]$.
+\end{example}
+
+\begin{example}[Prime cyclotomic]
+$f=x^{p-1}+\cdots+1=\frac{x^p-1}{x-1} \in\Q[x]$ has $p$th roots of unity except 1 as its complex roots. One can't apply Eisenstein since all coefficients are 1, but one can substitute by $x=y+1$ which is an automorphism of $\Q[x]$ and
+\[
+f=p+\frac{p!}{2!(p-2)!}y+\cdots+y^{p-1}
+\]
+which is clearly Eisenstein at $p$, so $f$ is irreducible.
+\end{example}
+
+\subsubsection{Reduction modulo prime $p$}
+\begin{prop}
+Let $f=a_m x^m+\cdots+a_0\in\Z[x]$, a prime $p\in\Z:p\nmid a_m$, and $\overline f = \overline{a_m}x^m+\cdots+\overline{a_0}\in\mathbb F_p[x]$ the reduction of $f\Mod p$. If $\overline f$ is irreducible in $\mathbb F_p[x]$ then $f$ is irreducible in $\Z[x]$ (and therefore $\Q[x]$).
+\end{prop}
+\begin{prop}
+Suppose $f=gh$ where $g,h\in\Z[x]$ and $\deg g,h>0,\ g=\sum^H b_i x^i,\ h=\sum^k c_i x^i$. Then $\overline f=\overline g\overline h$. It then suffices to see that $\deg g,h=\deg \overline g,\overline h$. Indeed, since $p\nmid a_m=b_Hc_k,\ p\nmid b_H$ nor $c_k$.
+\end{prop}
+
+\begin{example}
+Which of these are irreducible in $\Q[x]$?
+\begin{enumerate}
+\item $f=x^3+9x+6$
+\begin{enumerate}
+\item Eisenstein: indeed, $f$ is Eisenstein at $p=3$, so irreducible
+\item Rational root test: if $f$ is reducible, the only possible roots are $\pm1,\pm2,\pm3,\pm6$, each of which is not a root, so irreducible
+\item Reduction modulo 2: $\overline f=x^3+x=x(x^2+1)=x(x+1)^2\in\mathbb F_2[x]$, so inconclusive
+\end{enumerate}
+\item $x^7+15x^2+9x-3$
+\begin{enumerate}
+\item Rational root test: if $f$ has a root $\frac{r}{s}$ then $r\mid 3$, so $r=\pm1,\pm3$, each of which does not give a root
+\item Eisenstein: indeed, $f$ is Eisenstein at $p=3$, so irreducible
+\item Reduction modulo 2: $\overline f=x^7+x^2+x+1$ is reducible in $\mathbb F_2[x]$ since 1 is a root, so inconclusive
+\end{enumerate}
+\end{enumerate}
+\end{example}
+
+\begin{flushright}
+\textit{Week 4, lecture 1 starts here}
+\end{flushright}
+
+\begin{proof}[Proof of Gauss' lemma]
+Suppose $f\in\Z[x]:f=gh$ where $g,h\in\Q[x]$.
+\begin{enumerate}
+\item We know $\exists a,b\in\Q:g=ag_1,\ h=bh_1$ where $g_1,h_1\in\Z[x]$ and are primitive.
+\item It remains to see that $a=b^{-1}$. Write $f=gh=ab g_1h_1$ and $ab=\frac{r}{s}\in\Q$ where $\gcd(r,s)=1,\ s>0$.
+\begin{enumerate}
+\item Case 1: $s=1$, then $r\mid a_i \ \forall i$, but $f$ is primitive, so $r=\pm 1$, hence indeed $a=b^{-1}$
+\item Case 2: $s>1$, then one has $p$ prime such that $p\mid s,\ p\nmid r$, so $p$ divides all coefficients of $g_1h_1$. We claim that in this case, $p$ divides all coefficients of $g_1$ or $h_1$. Suppose there exists a coefficient $b_i$ of $g_1$ that's not divisible by $p$ with $i$ minimal, and a coefficient $c_k$ of $h_1$ that's not divisible by $p$ with $k$ minimal. Now set $N=j+k$, then the coefficient $d_N=b_0c_N+\cdots+b_jc_k+\cdots+b_Nc_0$ of $g_1h_1$ is divisible by $p$, a contradiction.
+\end{enumerate}
+\end{enumerate}
+\end{proof}
+
+\begin{example}[Using reduction modulo prime $p$]
+$f=x^3+ax+b\in\Z[x],\ a,b$ odd. Then $\overline f=x^3+x+1\in\mathbb F_2[x]$. One can check that it has no roots easily by going through all elements of $\mathbb F_2$, i.e. 0 and 1. So $\overline f$ is irreducible in $\mathbb F_2[x]$, hence irreducible in $\Z[x]$, hence irreducible in $\Q[x]$.
+\end{example}
+
+\begin{example}
+Is $f=x^4-7x^2+12$ irreducible?
+\begin{enumerate}
+\item Rational root test: possible roots $\frac{r}{s}$ satisfy $r=\pm1,\pm2,\pm3,\pm4,\pm6$, too much calculation
+\item Eisenstein: there is no prime we can try since 7 is prime and $7\nmid 12$, so inconclusive
+\item Reduction modulo 2: $\overline f=x^4+x^2$ is clearly reducible, so again inconclusive
+\end{enumerate}
+Well... in fact $f$ is pretty easy to decompose since $-3-4=-7$ and $(-3)(-4)=12$, so $f=(x^2-3)(x^2-4)=(x^2-3)(x+2)(x-2)$, so in our mind we know it's reducible.
+\end{example}
+
+\begin{flushright}
+\textit{Week 4, lecture 2 starts here (Gavin is back)}
+\end{flushright}
+
+\section{Continuation of chapter 1}
+\subsection{Simple extension}
+\begin{defn}
+$L/K$ is simple if $\exists \alpha\in L:K(\alpha)=L$.
+\end{defn}
+\begin{lemma}
+Given $L/K$ and $\alpha\in L$,
+\[
+\begin{aligned}
+\ev : K[x]&\rightarrow L \\
+g&\mapsto g(\alpha)
+\end{aligned}
+\]
+is a ring homomorphism uniquely defined by $K\rightarrow L$ and $x\mapsto \alpha$.
+\end{lemma}
+\begin{proof}
+We write $e$ for $\ev$:
+\begin{enumerate}
+\item $e(1)=1$
+\item $e(f+g)=(f+g)(\alpha)=f(\alpha)+g(\alpha)=e(f)+e(g)$
+\item $e(fg)=(fg)(\alpha)=f(\alpha)g(\alpha)=e(f)e(g)$
+\end{enumerate}
+Now suppose $\varphi$ is also a homomorphism with $\varphi(x)=\alpha$ and $\varphi|_K$ is $K\rightarrow L$. Then
+\[
+\varphi(bx^n)=\varphi(b)\varphi(x)^n=b\alpha^n=\ev(bx^n).
+\]
+\end{proof}
+
+\begin{prop}
+$L/K,\ \alpha\in L$ and $\ev$ as above. Exactly one of the following occurs:
+\begin{enumerate}
+\item $\ev$ is injective, then it extends to
+\[
+\widetilde{\ev}:K(x)\rightarrow K(\alpha) \subset L.
+\]
+\item (much more interesting) $\ev$ is not injective, then $\ker(\ev)=(f)$ where $f\in K[x]$ is irreducible and $\deg f\geq 1$, i.e. $f(\alpha)=0$ and for any $g:g(\alpha)=0,\ f\mid g$. Moreover, $\ev$ induces an isomorphism $K[x]/(f)\cong K[\alpha]=K(\alpha)\subset L$ (1st isomorphism theorem).
+\end{enumerate}
+\end{prop}
+\begin{proof}
+The injective case is boring since it's same as for $\Z$.
+
+Now $K[x]$ is a PID, so $\ker\ev=(f)$ for some $f\in K[x]$. It remains to prove $f$ is irreducible. If $f=gh$ where $1<\deg g,h <\deg f$, then WLOG $g(\alpha)=0$, so $g\in (f)$, so $f\mid g$, a contradiction.
+\end{proof}
+
+\begin{defn}
+$L/K$ and $\alpha\in L$. If $\exists$ monic $f\in K[x]:f(\alpha)=0$ then $\alpha$ is \textit{algebraic} over $K$. If not, then $\alpha$ is \textit{transcendental} over $K$.
+
+\begin{remark}[A miraculous proof of $K{[\alpha]}=K(\alpha)$ where $K$ field not using conjugates]
+By the 1st isomorphism theorem, $K[x]/(f)\cong K[\alpha]$. But $f$ is irreducible, so $(f)$ is prime, so $K[x]/(f)$ is a field. Hence $K[\alpha]$ is also a field and it must be the same field as $K(\alpha)$.
+\end{remark}
+
+When $\alpha$ is algebraic, the monic polynomial $f$ of smallest degree such that $f(\alpha)=0$ is called the \textit{minimal polynomial} of $\alpha$ over $K.$
+\end{defn}
+
+\begin{prop}
+\label{prop:basisofsimpleext}
+$K\subset K(\alpha)$ is a simple extension by algebraic $\alpha$ with minimal polynomial $f\in K[x]$ and $n:=\deg f>1$. Then $1,\alpha,\alpha^2,\ldots,\alpha^{n-1}\in K(\alpha)$ is a $K$-basis for $K(\alpha)$ and so $[K(\alpha):K]=n$.
+\end{prop}
+\begin{proof}
+Let $V:=K[x]_{<n},\ W:=K[x]/(f)\cong K(\alpha)$ as a $K$-vector space and define $L:V\rightarrow W$ by $h\mapsto h+(f)$.
+\begin{enumerate}
+\item Surjective: given $h+(f)\in W$, write $h=qf+r$ where $\deg r<\deg f$, then $L(r)=r+(f)=r+qf+(f)=h(f)$.
+\item Injective: uniqueness of $r$.
+\end{enumerate}
+So $L$ is bijective, and since $V$ has $1,x,x^2,\ldots,x^{n-1}$ as a basis, we can map it to get the desired basis of $K(\alpha)$.
+\end{proof}
+
+\begin{flushright}
+\textit{Week 4, lecture 3 starts here}
+\end{flushright}
+\subsection{Adjoining a root of a polynomial}
+\begin{thm}
+$f\in K[x]$ monic, irreducible and $\deg f\geq 2$. Then $\exists L/K$ and $\alpha\in L:L=K(\alpha)$ is simple and $f(\alpha)=0.$ Moreover, $f$ is minimal polynomial of $\alpha$ over $K$, so $[L:K]=\deg f$.
+
+In other words, if you have an irreducible polynomial, there \textit{is} a bigger field in which it has a root.
+\end{thm}
+\begin{proof}
+Set $L=K[x]/(f)$.
+\begin{enumerate}
+\item This is indeed a field since $f$ is irreducible.
+\item $K\hookrightarrow K[x] \twoheadrightarrow K[x]/(f)=L$ is injective by Proposition \ref{prop:fieldhomisinj}.
+\item Set $\alpha=x+(f) \in L$, then general elements of $L$ of the form $h+(f)$ are exactly $h(\alpha)$.
+\item $f(\alpha)=f+(f)=0+(f)=0_L$.
+\item Since $f$ is monic, irreducible and vanishes $\alpha$ it's minimal. By Proposition \ref{prop:basisofsimpleext} $[L:K]=\deg f$.
+\end{enumerate}
+\end{proof}
+
+\begin{coro}
+Let $f\in K[x]$ by any polynomial with $\deg f\geq 1$. Then $\exists L/K$ and $\alpha\in L:f(\alpha)=0,\ L=K(\alpha)$.
+\end{coro}
+\begin{proof}
+Pick any irreducible factor of $f$ and apply theorem above.
+\end{proof}
+
+\subsection{Algebraic extension / finite extension}
+\begin{defn}
+$L/K$ is \textit{algebraic} if any $\alpha\in L$ is algebraic over $K$.
+\end{defn}
+
+\begin{prop}
+Finite extensions are algebraic.
+\end{prop}
+\begin{proof}
+Suppose $[L:K]=n\geq 1$. If $\alpha\in L$, consider $n+1$ elements $1,\alpha,\alpha^2,\ldots,\alpha^n$ in the $n$-dimensional $K$-vector space $L$. This means there is a linear dependence relation
+\[
+c_0+c_1\alpha+c_1\alpha^2+\cdots+c_n \alpha^n=0\text{ where not all }c_i\text{ are zero}.
+\]
+Set $s:=\max\{i:c_i\neq 0\}$ and write
+\[
+f(x):=\frac{c_0}{c_s}+\frac{c_1}{c_s}x+\cdots+\frac{c_{s-1}}{c_s}x^{s-1}+x^s.
+\]
+Then $f$ is monic and $f(\alpha)=0.$
+\end{proof}
+
+\subsection{Maps between fields}
+\begin{defn}
+Suppose $L/K$ and $M/K$ are two extensions of the same field. A $K$-homomorphism $\varphi:L\rightarrow M$ is a homomorphism that fixed all elements of $K$, i.e. $\varphi(\alpha)=\alpha \ \forall\alpha\in K$.
+\end{defn}
+
+\begin{defn}[Main object of study]
+\[
+\emb_K(L,M):=\{\varphi:L\rightarrow M:\varphi \text{ is a }K\text{-homomorphism}\}.
+\]
+\end{defn}
+
+\begin{remark}
+This is not a group because if one has two maps from $L$ to $M$ one cannot compose them because $M$ might not be equal to $L$. Even it is, $\varphi$ is certainly injective because it's a map of fields, but if $L,M$ are infinite dimensional there's no reason why it needs to be surjective. But, if $L=M$ are finite extensions of $K$ then $\emb_K(L,M)$ is a group, called the \textit{Galois group} $\gal(L/K)$. Otherwise, it's just a set and has no real structure.
+\end{remark}
+\begin{example}
+$L=\C,\ K=\R$, then complex conjugation $\C\rightarrow\C$ by $z\mapsto \overline z$ is a $K$-homomorphism (also a $\Q$-homomorphism, a $\Q\left(\sqrt 2\right)$-homomorphism).
+\end{example}
+
+\begin{idea}
+\label{idea:phialphaisaroot}
+Suppose $\varphi\in\emb_K(L,M)$. If $\alpha\in L$ is a root of $f\in K[x]$, then $\varphi(\alpha)$ is a root of $f$ in $M$.
+\begin{proof}
+Write $f=a_nx^n+\cdots+a_1x+a_0$ where $a_i\in K$. Then
+\[
+\begin{aligned}
+f(\varphi(\alpha))&=a_n \varphi(\alpha)^n+\cdots+a_1\varphi(\alpha)+a_0\\
+&=\varphi(a_n)\varphi(\alpha)^n+\cdots+\varphi(a_1)\varphi(\alpha)+\varphi(a_0)\\
+&=\varphi(f(\alpha))=\varphi(0)=0.
+\end{aligned}
+\]
+\end{proof}
+\end{idea}
+
+\begin{prop}
+\label{prop:irredhasisotakesroottoanother}
+$L/K$ with $f\in K[x]$ irreducible and $\alpha,\beta\in L$ roots of $f$. Then $\exists$ a $K$-isomorphism $K(\alpha)\xrightarrow{\cong} K(\beta)$ with $\alpha\mapsto\beta$.
+\end{prop}
+\begin{proof}
+\[
+\begin{aligned}
+K(\alpha) \xleftarrow{\cong} &K[x]/(f) \xrightarrow{\cong} K(\beta) \\
+\alpha \mapsfrom &\quad x\qquad\ \ \mapsto \beta
+\end{aligned}
+\]
+\end{proof}
+
+\begin{coro}
+\label{coro:1to1ofembeddingsroots}
+$L/K$ with $f\in K[x]$ irreducible and $\alpha\in L$ a root of $f$. Then
+\[
+\begin{aligned}
+\emb_K(K(\alpha),L)&\rightarrow \{\beta\in L:f(\beta)=0\} \\
+\varphi&\mapsto\varphi(\alpha)
+\end{aligned}
+\]
+is a bijection. In particular, $|\emb_K(K(\alpha),L)|=$ number of roots of $f$ in $L$.
+\end{coro}
+\begin{proof}
+Big idea \ref{idea:phialphaisaroot} says it's well defined. Any $K$-homomorphism $\varphi:K(\alpha)\rightarrow L$ is determined by $\varphi(\alpha)$, so it's injective. Proposition \ref{prop:irredhasisotakesroottoanother} says if $\beta\in L$ is a root of $f$ then there is a $K$-isomorphism $K(\alpha)\rightarrow K(\beta)\subset L$, so it's surjective.
+\end{proof}
+
+\begin{flushright}
+\textit{Week 5, lecture 1 starts here}
+\end{flushright}
+
+\begin{thm}
+Let $L/K$ be finite and $M/K$ any extension. Then
+\[
+|\emb_K(L,M)|\leq [L:K].
+\]
+\end{thm}
+\begin{proof}
+If $L=K(\alpha)$ is a simple extension with minimal polynomial $f$ of $\alpha$. Then
+\[
+[L:K]=\deg f\geq \# \text{roots of }f\text{ in }M=|\emb_K(L,M)|.
+\]
+
+If not, do induction on $[L:K]$. Pick $\alpha\in L\backslash K$ and consider $L\subsetneqq K(\alpha)\subset L$ and the map of sets
+\[
+\begin{aligned}
+\rho:\emb_K(L,M)&\rightarrow \emb_K (K(\alpha),M) \\
+\varphi &\mapsto \varphi|_{K(\alpha)}
+\end{aligned}
+\]
+For any $\varphi\in\emb_K(K(\alpha),M)$,
+\[
+\rho^{-1}(\varphi)=\{\tilde \varphi:L\rightarrow M:\tilde\varphi|_{K(\alpha)}=\varphi\}.
+\]
+If $\tilde \varphi\in\rho^{-1}(\varphi)$ then it can be considered as a $K(\alpha)$-homomorphism where $M/K(\alpha)$ is given by $\varphi:K(\alpha)\rightarrow M$, i.e. $\tilde \varphi\in \emb_{K(\alpha)}(L,M)$. Since $[L:K(\alpha)]<[L:K]$ by tower law, by inductive hypothesis we have
+\[
+|\rho^{-1}(\varphi)| \leq [L:K(\alpha)].
+\]
+Hence
+\[
+\begin{aligned}
+|\emb_K(L,M)|&\leq \max \{|\rho^{-1}(\varphi)|:\varphi\in\emb_K(K(\alpha),M)\} \cdot |\emb_K(K(\alpha),M)| \\
+&\leq [L:K(\alpha)] \cdot [K(\alpha):K]\\
+&=[L:K].
+\end{aligned}
+\]
+\end{proof}
+
+\section{Automorphism group of a field}
+\begin{defn}
+An \textit{automorphism} of a field $L$ is a bijective ring homomorphism $L\rightarrow L$. The set of all of them, denoted $\Aut(L)$, is a group.
+
+If $K<L$ is a subfield, then a $K$\textit{-automorphism} is $\varphi:L\rightarrow L$ such that $\varphi(\alpha)=\alpha \ \forall \alpha\in K$. Again
+\[
+\Aut_K(L):=\{K\text{-automorphism }\varphi:L\rightarrow L\}
+\]
+is a group and is a subgroup of $\Aut(L)$.
+\end{defn}
+
+\subsection{Fixed field}
+\begin{defn}
+Let $L$ be a field and $\sigma\in\Aut(L)$. The \textit{fixed field} of $\sigma$ is
+\[
+L^\sigma = \{\alpha\in L:\sigma(\alpha)=\alpha\}.
+\]
+(If $\Sigma\subset\Aut(L)$, define $L^\Sigma=\{\alpha\in L:\sigma(\alpha)=\alpha \ \forall \sigma\in\Sigma\}$).
+\end{defn}
+
+\begin{example}
+Let $\sigma$ be complex conjugating of $\C$. Then
+\[
+\C^\sigma = \{z\in\C:\overline z=z\}=\R.
+\]
+Note that $[\C:\R]=2$ and $|\langle \sigma\rangle|=2$.
+
+Now let $L=\Q(\alpha,i)$ where $\alpha^2=5,\ i^2=-1$. Then $[L:\Q]=4$ with $\Q$-basis $\{1,\alpha,i,i\alpha\}$. For the same $\sigma$ (this is indeed an automorphism since it's injective and $\dim L=\dim L$), 
+\[
+L^\sigma = \{a+b\alpha+ci+di\alpha:a+b\alpha-ci-di\alpha=a+b\alpha+ci+di\alpha\}=\langle 1,\alpha\rangle=\Q(\alpha).
+\]
+Note again $[L:\Q(\alpha)]=|\langle\sigma\rangle|=2$.
+\end{example}
+
+\begin{lemma}
+Let $G\leq \Aut(L)$ be a finite subgroup. Then $[L:L^G]\leq |G|$.
+\end{lemma}
+\begin{proof}
+Let $G=\{\sigma_1,\ldots,\sigma_n\}$ and WLOG $\sigma_1=\text{id}$. Suppose $a_1,\ldots,a_{n+1}\in L$ and set $K=L^G$. It suffices to prove to find a nontrivial linear dependence relation among the $a_i$'s. Consider
+\[
+v_i=\begin{pmatrix}
+\sigma_1(a_i) \\ \vdots \\ \sigma_n(a_i)
+\end{pmatrix}\in L^n \text{ for }i=1,\ldots,n+1.
+\]
+So we have $v_1,\ldots,v_{n+1}\in L^n$. Clearly $\dim_L L^n=n$, so $\exists$ a dependence relation $\sum x_i v_i=0$ and not all $x_i=0$.
+\begin{flushright}
+\textit{Week 5, lecture 2 starts here}
+\end{flushright}
+Choose a shortest such relation and after relabelling,
+\[
+x_1 v_1+x_2v_2+\cdots+x_k v_k=0\text{ where } x_i\neq 0,\ k\text{ minimal}.
+\]
+Since we are in a field, WLOG $x_1=1$, i.e.
+\[
+\begin{pmatrix}
+a_1 & a_2 & \cdots & a_k \\
+\sigma_2(a_1) & \sigma_2(a_2) & \cdots & \sigma_2(a_k) \\
+\vdots \\
+\sigma_n(a_1) & & \cdots & \sigma_n(a_k)
+\end{pmatrix}
+\begin{pmatrix}
+x_1=1 \\ x_2 \\ \vdots \\ x_k
+\end{pmatrix}=
+\begin{pmatrix}
+0 \\ \\ \vdots \\ 0.
+\end{pmatrix}
+\]
+Apply any $\sigma\in G$ to the equations, then $\begin{pmatrix}
+\sigma(x_1) \\ \vdots \\\sigma(x_n)
+\end{pmatrix}$ is still a solution. But they have to be the same, since if not their difference would be another solution that's smaller the minimal one, a contradiction. So $\sigma(x_i)=x_i \ \forall i$.
+\end{proof}
+
+\begin{example}
+$f=x^3-2\in\Q[x]$. Then $\alpha_1=\alpha=\sqrt[3]2,\ \alpha_2=\alpha\omega,\ \alpha_3=\alpha\omega^2\in\C$ are the roots. The splitting field is then $L=\Q(\alpha,\omega)$. Let $K_i=\Q(\alpha_i)$, a simple extension. Note that $L/K_1$ is also simple. Clearly $[K_1:\Q]=3$. We also have $[L:K_1]=2$ since one can write $f=(x-\alpha)(x^2+\alpha x+\alpha^2)$ and the second factor must be irreducible, so it's the minimal polynomial. Hence by tower law we have $[L:\Q]=6$, and naturally we have the basis $\{1,\alpha,\alpha^2,\alpha\omega,\alpha^2\omega,2\omega\}$. We can write a better basis though: $\{1,\alpha,\alpha^2,\omega,\alpha\omega,\alpha^2\omega\}$. The tower structure is the same for $K_2$ and $K_3$ as well, i.e. $[K_i:\Q]=3,\ [L:K_i]=2 \ \forall i$.
+
+Now note that if $\varphi\in\emb_{\Q}(L,L)$ then $\varphi(\alpha_i)\in\{\alpha_i\}$. So $\exists$ a injective group homomorphism
+\[
+\begin{aligned}
+\emb_{\Q}(L,L) &\hookrightarrow S_3 \\
+\varphi &\mapsto \{i\mapsto j \text{ where }\varphi(\alpha_i)=\alpha_j\}.
+\end{aligned}
+\]
+e.g., $\sigma=$ complex conjugation $\in\emb_{\Q}(L,L)$ has $\sigma(\alpha_1)=\alpha_1,\ \sigma(\alpha_2)=\alpha_3$ and $\sigma(\alpha_3)=\alpha_2$, i.e. $\sigma$ corresponds to $(2,3)$. In fact $\emb_{\Q}(L,L)\cong S_3$ (one can hit arbitrary permutation in $S_3$ indirectly by \ref{coro:1to1ofembeddingsroots}). Let $\tau$ be corresponded to $(1,2,3)$.
+
+Now $\Aut(L)=S_3$ has 6 elements, so $[L:L^{\Aut(L)}]=6$, so $L^{\Aut(L)}$ must be $\Q$. Similarly, $L^{\langle\sigma\rangle}=K_1$ and $L^{\langle\tau\rangle}=\Q(\omega)$. In fact, every subfield of $L$ is a fixed field of a subgroup of $S_3$.
+\end{example}
+
+
+\begin{flushright}
+\textit{Week 5, lecture 3 starts here}
+\end{flushright}
+
+\begin{coro}
+\label{coro:degreeequalsizeofG}
+$G\subset \Aut(L)$ is finite, then $[L:L^G]=|G|$.
+\end{coro}
+\begin{proof}
+Let $K=L^G,\ M=L$, then
+\[
+[L:K]\leq |G| \leq |\Aut_K(L)| = |\emb_K(L,L)| \leq [L:K]
+\]
+so it's all equal signs.
+\end{proof}
+
+\begin{defn}
+The \textit{splitting field} for $f\in K[x]$ is the field extension $L/K$ such that $\exists \alpha_1,\ldots,\alpha_n\in L:f=c(x-\alpha_1)\cdots (x-\alpha_n),\ c\in K$ and $L=K(\alpha_1,\ldots,\alpha_n)$.
+\end{defn}
+
+\begin{remark}
+\begin{enumerate}
+\item Consider $f=x^3-x^2-2x+2=(x-1)(x^2-2)\in\Q[x]$. Then splitting field is $\Q\left(1,\sqrt2,-\sqrt2\right)=\Q\left(\sqrt 2\right)$.
+\item Same $f$ but $f\in \Q\left(\sqrt 3\right)[x]$. Then $\Q(\sqrt 2)$ is no longer splitting field, which now should be $\Q\left(\sqrt2,\sqrt3\right)$.
+\item If $K\subset \C$ is a subfield and $f$ has roots $\alpha_i$, then splitting field is always $K(\alpha_i)$.
+\end{enumerate}
+\end{remark}
+
+\begin{prop}[Splitting fields exist]
+$f\in K[x]$ with $\deg f=n$. Then $\exists$ splitting field $L/K$ with $[L:K]\leq n!$.
+\end{prop}
+\begin{proof}
+Factorise $f$ in $K[x]$ and let $k=\#$ linear factors. If $k=n$ then $f$ already splits, so done. Else, choose an irreducible factor $g_1\in K[x]$ and let $L_1=K[x]/(g_1)$ and $\alpha_1$ is a root of $g_1$ in $L_1$. Now let $k_1=\#$ linear factors of $f$ in $L_1[x]$. Note that $k<k_1\leq n$ since $(x-\alpha_1)$ is now one of them.
+
+We proceed inductively and get $K\subset L_1\subset L_2\subset \cdots L_s:=L$ where $f$ splits completely in $L$. By tower law,
+\[
+\begin{aligned}
+[L:K]&=[L:L_1][L_1:K]=[L:L_{s-1}] [L_{s-1}:L_{s-2}] \cdots [L_2:L_1][L_1:K]\\
+&\leq 2\cdot 3\cdots (n-1)n=n!.
+\end{aligned}
+\]
+\end{proof}
+
+\begin{thm}
+$L/K$ splitting field for $f\in K[x]$. If $M/K:f$ splits in $M$ then $\exists K$-homomorphism $L\rightarrow M$.
+\end{thm}
+\begin{proof}
+We know $L=K(\alpha_1,\ldots,\alpha_s)$ where $\alpha_i$ are (some of) the roots of $f$. Do induction on $s$. Let $m\in K[x]$ be minimal polynomial of $\alpha_1$. Note that $m\mid f$, so $m$ splits in $M$, i.e. all its roots are in $M$. Choose $\beta_1\in M$ be one of them. Then $\exists K$-homomorphism $L\supset K(\alpha_1)\xrightarrow{\cong} K(\beta_1)\subset M$. For notation, set $L_1=K(\alpha_1)$. Then $L=L_1(\alpha_2,\ldots,\alpha_s)$ is a splitting field for $g=\frac{f}{(x-\alpha_1)} \in L_1[x]$. By induction, $\exists L_1$-homomorphism $L\rightarrow M$.
+\end{proof}
+
+\begin{coro}[A splitting field is unique up to isomorphism]
+\label{coro:splittingfieldsisomorphic}
+If $L/K, L'/K$ are both splitting fields for $f\in K[x]$, then $\exists K$-isomorphism $L\rightarrow L'$.
+\end{coro}
+\begin{proof}
+We know $\exists K$-homomorphism $L\rightarrow L'$ and $\exists K$-homomorphism $L'\rightarrow L$. They are both injective, so $\dim_K L\leq \dim_K L'\leq \dim_K L$, so by linear algebra (and since dimensions are finite) they are surjective, so bijective.
+\end{proof}
+
+\begin{thm}
+\label{thm:splittingthennormal}
+$L/K$ splitting field for $f\in K[x]$ and $g\in K[x]$ be irreducible with $\geq 1$ roots in $L$. Then $g$ splits completely in $L[x]$, i.e. all its roots are in $L$.
+\end{thm}
+\begin{proof}
+Regard $g\in L[x]$ and let $M/L$ be splitting field of $g$. Suppose $\alpha\in M$ is a root of $g$. Then $L(\alpha)$ is a splitting field for $f\in K(\alpha)[x]$. Tower law says
+\[
+[L(\alpha):L][L:K]=[L(\alpha):K(\alpha)][K(\alpha):K].
+\]
+If $\beta\in M$ is another root of $g$ then the same is true for $\beta$ and $K(\alpha)\cong K(\beta)$. But note that then $L(\beta)$ is also a splitting field for $f\in K(\alpha)[x]$, so $L(\alpha)\cong L(\beta)$. Hence if $\alpha\in L$ is a root, $[L(\alpha):L]=1$, so $[L(\beta):L]=1$ for all other roots $\beta$, so $L(\beta)=L$, so $\beta \in L$.
+
+\[
+\xymatrix{
+    K(\alpha) \ar@{^{(}->}[r] & L(\alpha) \ar@{^{(}->}[dr] \\
+    K \ar@{^{(}->}[r] \ar@{^{(}->}[u] & L \ar@{^{(}->}[r] \ar@{^{(}->}[u] & M
+}
+\]
+\end{proof}
+
+\begin{flushright}
+\textit{Week 6, lecture 1 starts here}
+\end{flushright}
+
+\subsection{Normal extension}
+
+\begin{defn}
+A field extension is $L/K$ is \textit{normal} if the following holds: a irreducible $g\in K[x]$ has roots in $L\Rightarrow g$ splits completely in $L$.
+\end{defn}
+
+\begin{coro}
+If $L/K$ is finite then the following are equivalent:
+\begin{enumerate}
+\item $L/K$ is normal
+\item $L/K$ is a splitting field of some $f\in K[x]$
+\end{enumerate}
+\end{coro}
+\begin{proof}
+$2\Rightarrow 1$ is Theorem $\ref{thm:splittingthennormal}$.
+
+For $1\Rightarrow 2$, write $L=K(\alpha_1,\ldots,\alpha_n)$. Let $m_i$ be minimal polynomial of $\alpha_i$ over $K$. Since $m_i(\alpha_i)=0$, they all split completely in $L$. Now let $f=m_1m_2\cdots m_n$ which also split completely in $L$. Then $L/K$ is a splitting field of $f$ over $K$.
+\end{proof}
+
+\begin{coro}
+\label{coro:normalclosure}
+If $L/K$ is finite then $\exists N/L$ normal (called the \textit{normal closure}) (and therefore $N/K$ is normal).
+\end{coro}
+\begin{proof}
+Write $L=K(\alpha_1,\ldots,\alpha_n)$. Let $m_i$ be minimal polynomial of $\alpha_i$ over $K$. Let $N$ be splitting field for $f=m_1m_2\cdots m_n\in L[x]$.
+\end{proof}
+
+\begin{coro}
+\label{coro:finitenormalthenrestriction}
+Let $L/K$ be finite and normal and $K\subset M\subset L$. If $\xi:M\rightarrow L$ is a $K$-homomorphism, then $\exists \varphi: L\rightarrow L$ such that $\varphi|_M=\xi$.
+\end{coro}
+\begin{proof}
+Suppose $L$ is splitting field for $f\in K[x]$. Since $\xi$ fixes $K$, $\xi(f)=f$, so $L/M$ is a splitting field for $f$ and $K/\xi(M)$ is a splitting field for $\xi(f)$. Hence by uniqueness of splitting field we have the isomorphism.
+\end{proof}
+
+\begin{coro}
+\label{coro:FNIthenAutTakesRootToRoot}
+If $L/K$ is finite and normal and irreducible $f\in K[x]$ has roots $\alpha,\beta\in L$, then $\exists \varphi\in\Aut_K(L)$ such that $\varphi(\alpha)=\beta$.
+\end{coro}
+
+\begin{prop}
+\label{prop:autFixNormal}
+Let $L/K$ be finite and normal. If $M/L$ is finite then
+\begin{enumerate}
+\item If $\varphi:L\rightarrow M$ is a $K$-homomorphism then $\varphi(L)=L$ (N.B. this is not saying $\varphi(l)=l \ \forall l\in L$).
+\item If $\tau\in\Aut_K(M)$ then $\tau (L)=L$.
+\end{enumerate}
+\end{prop}
+
+\subsection{Separable}
+\begin{defn}
+$f\in K[x]\backslash \{0\}$ is \textit{separable} over $K$ if it has $n=\deg f$ distinct roots in a splitting field. Otherwise it is \textit{inseparable}.
+\end{defn}
+
+\begin{remark}[Handwavy teaser]
+Suppose $K\subset \C,\ f\in K[x]$ and $n=\deg f \geq 2$. We know over $\C,\ f=c\prod_{i=1}^s (x-\alpha_i)^{m_i}$. We claim if $f$ is irreducible over $K$ then all $m_i=1$ and $s=n$ and $f$ is separable over $K$. Consider $f'=\frac{df}{dx}$ with $\deg f'<\deg f$. So $\gcd (f,f')=1$. Write $f=(x-\alpha_1)^{m_1}g$ But now 
+\[
+f'=m_1(x-\alpha_1)^{m_1-1} g + (x_-\alpha_1)^{m_1} g'
+\]
+so if WLOG $m_1\geq 2,\ (x-\alpha_1)\mid f'$ so $(x-\alpha_1)\mid \gcd (f,f')$, a contradiction.
+\end{remark}
+
+\begin{flushright}
+\textit{Week 6, lecture 2 starts here}
+\end{flushright}
+
+\begin{example}
+\begin{enumerate}
+\item $x^3-2=x^3+1=(x+1)^3\in \mathbb F_3[x]$ is inseparable since it only has 1 distinct root.
+\item $f=x^p-t\in K[x]$ where $p>2$ and $K=\mathbb F_p(t)$. This is irreducible. If $\alpha$ is a root, write $L=K(\alpha)$ then $(x-\alpha)^p=x^p-\alpha^p=x^p-t$. So this is inseparable, but $f'=px^{p-1}-t=0$ so it doesn't contradict previous remark.
+\end{enumerate}
+\end{example}
+
+\begin{defn}
+\begin{enumerate}
+\item $\alpha$ is \textit{separable} if minimal polynomial of $\alpha$ is separable.
+\item $L/K$ is \text{separable} if every $\alpha\in L$ is separable.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}
+The \textit{formal derivative} of $f\in K[x]$ is
+\[
+Df:=a_1+2a_2x+\cdots+na_nx^{n-1}
+\]
+\end{defn}
+
+\begin{thm}
+If $f\in K[x]$ is irreducible then $f$ is inseparable iff $\text{char }K=p$ and $f=a_0+a_1 x^p +\cdots +a_n x^{pn}$.
+\end{thm}
+
+\begin{lemma}
+\label{lemma:separableifffDfcoprime}
+$f\in K[x]\backslash \{0\}$ is separable over $K$ iff $\gcd(f,Df)=1$, i.e. $f$ is inseparable iff $\gcd(f,Df)\neq 1$.
+\end{lemma}
+\begin{proof}
+Let $L/K$ be splitting field of $f$. If $f=c\prod_{i=1}^n (x-\alpha_i)$ where $c\in K,\ \alpha_i\in L,\ n=\deg f$ is separable, then $\alpha_i$ are distinct and
+\[
+Df=c\sum_{j=1}^n \prod_{k\neq j} (x-\alpha_k),
+\]
+and observe that $x-\alpha_i$ cannot be a common factor.
+
+Now suppose $f$ is inseparable then write $f=(x-\alpha)^mg$ where $\alpha$ is a repeated root (i.e. $m\geq 2$). Then
+\[
+Df=m(x-\alpha)^{m-1}g+(x-\alpha)^m Dg
+\]
+so $(x-\alpha)$ is a common factor, so $\gcd (f,Df)\neq 1$ in $L[x]$. But then it must be that $\gcd(f,Df)\neq 1$ in $K[x]$.
+\end{proof}
+
+\begin{thm}
+If $L=K(\alpha_1,\ldots,\alpha_n)$ then $L/K$ is separable if $\alpha_i$ are all separable.
+\end{thm}
+
+\section{Galois theory}
+\begin{defn}
+The \textit{Galois group} of $L/K$ is $\gal(L/K):=\Aut_K(L)$.
+
+If $f\in K[x]$ is separable, let $L/K$ be a splitting field of $f$ over $K$. Then the \textit{Galois group} of $f$ is $\gal(f):=\gal(L/K)$ (defined up to isomorphism).
+\end{defn}
+e.g. $f=x^3-2$ then $\gal(f)\cong S_3$.
+
+\begin{defn}
+$H\subset S_n$ is \textit{transitive} if $\forall i,j\in \{1,\ldots,n\},\ \exists\sigma\in H:\sigma(i)=j$.
+\end{defn}
+\begin{example}
+$H_1=\langle (1,2)\rangle=\{\id, (1 2)\}$ is not transitive.
+
+$H_2=\langle(123)\rangle=\{\id,(123),(132)\}$ is transitive.
+\end{example}
+
+\begin{lemma}
+\label{lemma:irredthengalcongtrans}
+If $f\in K[x]$ is irreducible and $\deg f=n$, then $\gal(f)$ is isomorphic to a transitive subgroup of $S_n$.
+\end{lemma}
+
+\begin{flushright}
+\textit{Week 6, lecture 3 starts here}
+\end{flushright}
+
+\subsection{Galois extension}
+\begin{defn}
+An extension $L/K$ is \textit{Galois} if it's the splitting field of a separable polynomial, or equivalently it's finite, normal and separable.
+\end{defn}
+\begin{lemma}
+\label{lemma:LKgalthenLMgal}
+If $K\subset M\subset L$ and $L/K$ is Galois, then $L/M$ is Galois.
+\end{lemma}
+\begin{remark}
+$M/K$ is not necessarily Galois, e.g. $\Q\subset \Q(\sqrt[3]2)\subset \Q(\sqrt[3]2,\omega)$.
+\end{remark}
+
+\begin{thm}
+\label{thm:honkhonk}
+$L/K$ Galois, then $[L:K]=|\gal(L/K)|$.
+\end{thm}
+\begin{proof}
+We prove by induction on $n=[L:K]$. Indeed when $n=1,\ L=K$ and $\gal(L/K)=\{\id\}$. Now suppose $n>1$ and let $L/K$ be the splitting field of a separable $f\in K[x]$. So $d=\deg f>1$ and pick $\alpha\in L\backslash K$ a root of $f$ and let $m$ be minimal polynomial of $\alpha$ over $K$ (so $m$ is a irreducible factor of $f$ in $K[x]$).
+
+Now $[L:K(\alpha)]<[L:K]$ since $[K(\alpha):K]>1$, and by previous lemma, $L/K(\alpha)$ is Galois, so by inductive hypothesis $[L:K(\alpha)]=|\gal(L/K(\alpha))|$.
+
+$f$ is separable implies $m$ is separable, so now
+\[
+[K(\alpha):K]=\deg m=\# \text{roots of }m=|\emb_K(K(\alpha),L)|.
+\]
+
+Consider restriction $\text{res}_\alpha:\gal(L/K)\rightarrow \emb_K(K(\alpha),L)$ by $\sigma\mapsto\sigma|_{K(\alpha)}$. This is surjective: by Corollary \ref{coro:finitenormalthenrestriction} given $\iota:K(\alpha)\rightarrow L,\ \exists:\sigma\in\gal(L/K):\sigma|_{K(\alpha)}=\iota$. Suppose $\tau\in \gal(L/K):\text{res}_\alpha(\tau)=\iota$. Then $\tau^{-1}\sigma=\id$ on $K(\alpha)$, i.e. $\tau^{-1}\sigma\in\gal(L/K(\alpha))$. Now we can consider $\gal(L/K(\alpha))$ as a subgroup of $\gal(L/K)$, then $\tau,\sigma$ are in the same left coset and one has
+\[
+\frac{|\gal(L/K)|}{|\gal(L/K(\alpha))|}=|\emb_K(K(\alpha),L)|.
+\] 
+So finally
+\[
+\begin{aligned}
+|\gal(L/K)|&=|\gal(L/K(\alpha))|\times |\emb_K(K(\alpha),L)|\\
+&=[L:K(\alpha)]\times [K(\alpha):K]\\
+&=[L:K].
+\end{aligned}
+\]
+\end{proof}
+
+\begin{coro}
+$L/K$ Galois, then
+\[
+L^{\gal(L/K)}=K.
+\]
+\end{coro}
+\begin{proof}
+One has
+\[
+K\subset L^{\gal(L/K)}\subset L
+\]
+and by Corollary \ref{coro:degreeequalsizeofG}
+\[
+|\gal(L/K)|=\left[ L:L^{\gal(L/K)} \right]
+\]
+so by tower law $\left[L^{\gal(L/K)}:K\right]=1$ and thus desired.
+\end{proof}
+
+\begin{prop}
+\label{prop:normaliffnormal}
+$L/K$ Galois, $K\subset M\subset L$. Then $M/K$ is normal iff $\gal(L/M)\leq \gal(L/K)$ is normal.
+\end{prop}
+\begin{proof}
+Let $G=\gal(L/K)$ and $H=\gal(L/M)$. $M/K$ is normal implies $\sigma(M)=M \ \forall \sigma\in G$ by Proposition \ref{prop:autFixNormal}. Suppose $h\in H$ and $\sigma\in G$. We want to show $\sigma h\sigma^{-1}\in H$. Let $\alpha\in M$ and set $\beta:=\sigma^{-1}(\alpha)\in M$. Then
+\[
+\sigma h \sigma^{-1}(\alpha)=\sigma h(\beta)=\sigma(\beta)=\alpha.
+\]
+
+Now suppose $H\unlhd G$. Let $\alpha\in M$ with minimal polynomial $g\in K[x]$. We want to prove $g$ splits completely in $M$. Let $\beta\in L$ be any other root, then by Corollary \ref{coro:FNIthenAutTakesRootToRoot} $\exists:\sigma\in G:\sigma(\alpha)=\beta$. If $h\in H$ then $h(\alpha)=\alpha\in M$. So
+\[
+\sigma h \sigma^{-1}(\beta)=\sigma h(\alpha)=\sigma(\alpha)=\beta,
+\]
+and since all elements of $H$ are of the form $\sigma h\sigma^{-1}$, $\beta\in L^H$. But $L^H=M$ since $L/M$ is Galois, so $\beta\in M$.
+\end{proof}
+
+\begin{flushright}
+\textit{Week 7, lecture 1 starts here}
+\end{flushright}
+
+\subsection{Lattice map}
+\begin{defn}
+A \textit{lattice} is a collection of vertices (usually labelled) joined by directed lines (usually indicating relations between vertices).
+
+Given $L/K$ finite, the \textit{subfield lattice} of $L/K$ is $\mathcal F_{L/K}:=\{M\subset L:M\text{ a subfield, }M/K\text{ an extension}\}$, a partially ordered set by inclusion, simply denoted $\mathcal F$ when context is clear.
+
+Given $G$ a finite group, the \textit{subgroup lattice} of $G$ is $\mathcal G_G=:\{H\subset G:H\text{ a subgroup}\}$, partially ordered by inclusion.
+\end{defn}
+
+Note that $\gal(L/K)$ acts on $\mathcal F$ by the natural way and $G$ acts in $\mathcal G$ by conjugation. Normal extensions get mapped to themselves by Proposition \ref{prop:autFixNormal}, normal subgroups get mapped to themselves by group theory.
+
+\begin{defn}
+Define two order reserving maps between lattices $\dagger:\mathcal G_G\rightarrow \mathcal F_{L/K}$ by $H\mapsto H^\dagger:=L^H$ and $\ast:\mathcal F_{L/K}\rightarrow \mathcal G_G$ by $M\mapsto M^\ast:=\stab_G(M)$.
+\end{defn}
+
+\begin{lemma}[Polarity]
+\begin{enumerate}
+\item $H_1\subset H_2\subset G \Rightarrow H_2^\dagger \subset H_1^\dagger$.
+\item $K\subset M_1\subset M_2\subset L\Rightarrow M_2^\ast\subset M_1^\ast$.
+\item $H\leq G\Rightarrow H\subset \left(H^\dagger\right)^\ast$.
+\item $K\subset M\subset L\Rightarrow M\subset \left(M^\ast\right)^\dagger$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\begin{enumerate}
+\item[3.] $h\in H\Rightarrow h\in\gal(L/H^\ast)\Rightarrow h\in \left(H^\dagger\right)^\ast$.
+\item[4.] Similar.
+\end{enumerate}
+\end{proof}
+
+\subsection{Galois correspondence}
+\begin{thm}[Galois correspondence]
+\label{thm:galoiscorr}
+Let $L/K$ be Galois, $\mathcal F=\mathcal F_{L/K}$, $G=\gal(L/K)$ and $\mathcal G=\mathcal G_G$. Then
+\begin{enumerate}
+\item $\ast,\dagger$ are mutually inverse bijection, giving inclusion reserving bijection $\mathcal F \leftrightarrow \mathcal G$.
+\item If $K\subset M\subset L$ then $[L:M]=|M^\ast|$ and therefore $[M:K]=\frac{|\gal(L/K)|}{|M^\ast|}$.
+\item $M/K$ is normal iff $M^\ast\unlhd \gal(L/K)$. In this case, $\gal(M/K)\cong \gal(L/K)/M^\ast$.
+\end{enumerate}
+\end{thm}
+\begin{proof}
+\begin{enumerate}
+\item Let $M\in\mathcal F$. Note $L/M$ is Galois by Lemma \ref{lemma:LKgalthenLMgal}, so by Corollary \ref{coro:degreeequalsizeofG} and Theorem \ref{thm:honkhonk},
+\[
+\left[L:(M^\ast)^\dagger\right]=|M^\ast|=[L:M].
+\]
+Since $M\subset (M^\ast)^\dagger$, one has $M=(M^\ast)^\dagger$, i.e. $\dagger\circ\ast$ is identity.
+
+Now let $H\subset \mathcal G$. Then
+\[
+|H|=\left[L:H^\dagger\right]=\left|\gal\left(L/H^\dagger\right)\right|=\left|\left(H^\dagger\right)^\ast\right|.
+\]
+Since $H\subset \left(H^\dagger\right)^\ast$, one has $H=\left(H^\dagger\right)^\ast$.
+\item By \ref{thm:honkhonk} and tower law.
+\item By Proposition \ref{prop:normaliffnormal}. Isomorphism by 1st isomorphism theorem and considering the map $\gal(L/K)\rightarrow \gal(M/K):\sigma\mapsto\sigma|_M$.
+\end{enumerate}
+\end{proof}
+
+\begin{flushright}
+\textit{Week 7, lecture 2 starts here}
+\end{flushright}
+
+\subsection{Biquadratic extension}
+Let $K$ be a field with $\Char K\neq 2$, $a,b\in K:b(a^2-b)\neq 0$ where $b$ is not a square in $K$. Consider $f=(x^2-a)^2-b=x^4-2ax^2+(a^2-b)$. Let $L/K$ be a splitting field of $f$. Such extensions are called \textit{biquadratic}.
+
+\begin{enumerate}
+\item Consider $\beta:\beta^2=b$. Then $x^2-a=\pm\beta$. Set $\alpha:\alpha^2=a+\beta$ and $\alpha':\alpha'^2=a-\beta$, so $f$ has 4 distinct roots $\pm\alpha,\pm\alpha'$, i.e. $f$ is separable and $L=K(\alpha,\alpha')$.
+\item Now one has
+\[
+[L:K]=[L:K(\alpha)][K(\alpha):K(\beta)][K(\beta):K]\leq 2\times 2\times 2=8,
+\]
+so it's 2 or 4 or 8.
+\item \begin{lemma}
+\begin{enumerate}
+\item $a^2-b$ not a square in $K\Rightarrow [K(\alpha):K]=[K(\alpha'):K]=4$.
+\item If also $b(a^2-b)$ not a square in $K$ then $[L:K]=8$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+\begin{enumerate}
+\item We show $[K(\alpha):K(\beta)]=2$. Suppose $\alpha\in K(\beta)$, i.e. $a+\beta$ is a square in $K(\beta)$, then
+\[
+a+\beta=(c+d\beta)^2=(c^2+d^2b)+2cd\beta,\ a-\beta=(c^2+d^2b)-2cd\beta=(c-d\beta)^2,
+\]
+so
+\[
+a^2-b=\left(c^2-d^2b\right)^2,
+\]
+so $a^2-b$ is a square, a contradiction.
+\item Similar.
+\end{enumerate}
+\end{proof}
+\item \begin{lemma}
+Now suppose $[K(\alpha):K]=[K(\alpha'):K]=4$. Then
+\begin{enumerate}
+\item $q=x^2-(a+\beta),\ q'=x^2-(a-\beta)$ are the minimal polynomials of $\alpha,\alpha'$ over $K(\beta)$.
+\item If $\sigma\in\gal(L/K)$ then the only 8 possibilities are:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccccccc}
+             &   & 1   & 2  & 3  & 4   & 5  & 6  & 7   & 8   \\
+$\sigma(\beta)$  &   & $\beta$   & $\beta$  & $\beta$  & $\beta$   & $-\beta$ & $-\beta$ & $-\beta$  & $-\beta$  \\
+$\sigma(\alpha)$  & = & $\alpha$   & $\alpha$  & $-\alpha$ & $-\alpha$  & $\alpha'$ & $\alpha'$ & $-\alpha'$ & $-\alpha'$ \\
+$\sigma(\alpha')$ &   & $-\alpha'$ & $\alpha'$ & $\alpha'$ & $-\alpha'$ & $\alpha$  & $-\alpha$ & $\alpha$   & $-\alpha$ 
+\end{tabular}
+\end{table}
+i.e. $\gal(L/K)$ is a subgroup of a group of order 8.
+\end{enumerate}
+\end{lemma}
+\item If $[L:K]=2^3=8$, then $|\gal(L/K)|=[L:K]=8$ so it has to be the whole thing above, which is $D_8\leq S_4$: indeed, let $\sigma$ be \#6 above and $\tau$ be \#1 above.
+\item Subgroup lattice of $D_8$:
+\[
+\xymatrix{
+& & \{\id\}\ar@{-}[dll]\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr]\ar@{-}[drr] \\
+\langle\tau\rangle\ar@{-}[dr] & \langle\sigma^2\tau\rangle\ar@{-}[d] & \langle\sigma^2\rangle\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr] & \langle\sigma^3\tau\rangle\ar@{-}[d] & \langle\sigma\tau\rangle\ar@{-}[dl] \\
+& \langle\sigma^2,\tau\rangle\ar@{-}[dr] & \langle\sigma\rangle\ar@{-}[d] & \langle\sigma^2,\sigma\tau\rangle\ar@{-}[dl] & \\
+& & D_8
+}
+\]
+\item Subfield lattice by Galois correspondence:
+\[
+\xymatrix{
+& & L\ar@{-}[dll]\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr]\ar@{-}[drr] \\
+L^\tau\ar@{-}[dr] & L^{\sigma^2\tau}\ar@{-}[d] & L^{\sigma^2}\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr] & L^{\sigma^3\tau}\ar@{-}[d] & L^{\sigma\tau}\ar@{-}[dl] \\
+& L^{\langle\sigma^2,\tau\rangle}\ar@{-}[dr] & L^{\langle\sigma\rangle}\ar@{-}[d] & L^{\langle\sigma^2,\sigma\tau\rangle}\ar@{-}[dl] & \\
+& & L^{\langle\sigma,\tau\rangle}
+}
+\]
+\begin{flushright}
+\textit{Week 7, lecture 3 starts here}
+\end{flushright}
+\item What actually are these fixed fields? Let $\gamma=\alpha\alpha',\ \delta=\alpha+\alpha',\ \delta'=\alpha-\alpha'$. By checking how $\alpha,\alpha'$ and $\beta$ are fixed by $\sigma$ and $\tau$ and considering tower law, one has
+
+\[
+\xymatrix{
+& & L=K(\alpha,\alpha')\ar@{-}[dll]\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr]\ar@{-}[drr] \\
+K(\alpha)\ar@{-}[dr] & K(\alpha')\ar@{-}[d] & K(\beta,\delta)\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr] & K(\delta')\ar@{-}[d] & K(\delta)\ar@{-}[dl] \\
+& K(\beta)\ar@{-}[dr] & K(\beta\gamma)\ar@{-}[d] & K(\gamma)\ar@{-}[dl] & \\
+& & K
+}
+\]
+\item \begin{example}
+$K=\Q$.
+\begin{enumerate}
+\item $a=0,\ b=2,\ a^2-b=2$ and $b(a^2-b)=-4$ are not squares in $\Q$. Then $\gal(f)\leq D_8$ and note that $f=x^4-2$ has 4 distinct roots $\alpha=\sqrt{0+\sqrt2}=\sqrt[4]2,-\alpha,\alpha'=i\alpha,-\alpha$. The $\beta$ as above is $\sqrt2$. Then we have the subfield lattice
+\[
+\xymatrix{
+& & L=\Q(\alpha,i)\ar@{-}[dll]\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr]\ar@{-}[drr] \\
+\Q(\alpha)\ar@{-}[dr] & \Q(i\alpha)\ar@{-}[d] & \Q(i\sqrt2)\ar@{-}[dl]\ar@{-}[d]\ar@{-}[dr] & \Q((1-i)\alpha))\ar@{-}[d] & \Q((1+i)\alpha)\ar@{-}[dl] \\
+& \Q(\sqrt2)\ar@{-}[dr] & \Q(i)\ar@{-}[d] & \Q(i\sqrt2)\ar@{-}[dl] & \\
+& & \Q
+}
+\]
+by above.
+\item $a=1,\ b=3,\ a^2-b=-2$ and $b(a^2-b)=-6$ are not squares in $\Q$. Then similarly $f$ has 4 distinct roots $\pm\alpha=\pm\sqrt{1+\sqrt3}$ and $\pm\alpha'=\pm i\sqrt{\sqrt3-1}$.
+\end{enumerate}
+\end{example}
+\item Now suppose $\sqrt{b(a^2-b)}\in K$. Then observe that
+\[
+(\beta\alpha\alpha')^2=b(a+\beta)(a-\beta)=b(a^2-b),
+\]
+so $\beta\alpha\alpha'\in K$, hence
+\[
+\alpha'=\frac{\text{something in }K}{\beta\alpha}\in K(\alpha,\beta)=K(\alpha),
+\]
+so $K(\alpha,\alpha')=K(\alpha)$ is a splitting field, and
+\[
+[L:K]=[K(\alpha):K(\beta)][K(\beta):K]=2\times 2=4=|\gal(L/K)|.
+\]
+\item We now observe that $f=(x^2-a)^2-b$ is then irreducible. Use a similar method you've seen before to verify (first suppose there is a root, then suppose split into quadratics). So by Lemma \ref{lemma:irredthengalcongtrans}, $\gal(f)$ is a transitive subgroup of $D_8$. In particular, $\exists\sigma\in\gal(f):\sigma(\alpha)=\alpha'$ and $\langle\sigma\rangle\leq\gal(f)$. By the 8 possibilities we listed, $\sigma(\beta)=-\beta$, and since $\sigma$ fixed $K$, one has
+\[
+\sigma(\beta\alpha\alpha')=\sigma(\beta)\sigma(\alpha)\sigma(\alpha')=-\beta\alpha'\sigma(\alpha')=\beta\alpha\alpha',
+\]
+so $\sigma(\alpha')=-\alpha$. Now by $\sigma$,
+\[
+\begin{aligned}
+\alpha\mapsto\alpha'\mapsto -\alpha\mapsto-\alpha'\mapsto\alpha \\
+\alpha'\mapsto-\alpha\mapsto -\alpha'\mapsto\alpha\mapsto\alpha'
+\end{aligned}
+\]
+so $\sigma^4=\id$ and $\{\id,\sigma,\sigma^2,\sigma^3\}\subset \gal(f)$,
+and since $\gal(f)=4,\ \langle\sigma\rangle$ is in fact the whole $\gal(f)$ and we have the subgroup-subfield lattice correspondence:
+\[
+\xymatrix{
+\langle\sigma\rangle = C_4\ar@{-}[d] \\
+\langle\sigma^2\rangle = C_2\ar@{-}[d] \\
+\{\id\}
+} \qquad \xymatrix{
+L=K(\alpha)\ar@{-}[d] \\
+K(\beta)\ar@{-}[d] \\
+K
+}
+\]
+\end{enumerate}
+
+\begin{flushright}
+\textit{Week 8, lecture 1 starts here}
+\end{flushright}
+
+\section{Finite field}
+\begin{defn}
+A \textit{finite field} is a field with finite elements.
+\end{defn}
+
+\begin{prop}
+If $K$ is a finite field then $\Char K=p>0$ and $|K|=p^n$ for some $n\in\mathbb N$.    
+\end{prop}
+\begin{proof}
+Consider the unique homomorphism $\varphi:\Z\rightarrow K$. Since $K$ is a field, in particular a domain, $\ker\varphi$ is a prime ideal, so is of the form $p\Z$. By 1st isomorphism theorem, $\Z/p\Z\cong \im \varphi\subset K$, so $\Char K=p$. But now note that $K$ is a finite dimensional $\Z/p\Z$-vector space, so $|K|=p^n$ where $n$ is its dimension.
+\end{proof}
+
+\begin{thm}
+Given prime $p$ and $n\in\mathbb N$, set $q=p^n$, then splitting field $L$ of $x^q-x\in\mathbb F_p[x]$ is a field with $|L|=q$. Moreover, $L/\mathbb F_p$ is Galois and any two fields with $q$ elements are isomorphic.
+\end{thm}
+\begin{proof}
+Write $f=x^q-x$. Then $Df=qx^{q-1}-1=-1\in\mathbb F_p[x]$, so $f$ and $Df$ are coprime, so $f$ is separable by \ref{lemma:separableifffDfcoprime} and $L/\mathbb F_p$ is then by definition Galois.
+
+Let $M\subset L$ be the set of roots of $f$, i.e. $M=\{\alpha\in L:\alpha^q=\alpha\}$. We claim $M$ is a field. Indeed, if $\alpha,\beta\in M$ then $(\alpha\beta)^q=\alpha^q\beta^q=\alpha\beta$ so $\alpha\beta\in M$, and $(\alpha+\beta)^q=\alpha^q+\beta^q=\alpha+\beta$ so $\alpha+\beta\in M$. Since $L$ is defined to be the smallest field that contains $M,\ M=L$, hence $|L|=|M|=q$.
+
+Suppose $N/\mathbb F_p$ is another field with $q$ elements. Consider $N^\ast=N\backslash \{0\}$, a group with $q-1$ elements. If $\beta\in N^\ast$ then $|\beta|\mid q-1$ and in particular $\beta^{q-1}=1$, so $\forall\beta\in N$ one has $\beta^q=\beta$, i.e. every element of $N$ is a root of $f$. This means $N$ is a splitting field of $f\in\mathbb F_p$, and by \ref{coro:splittingfieldsisomorphic} $N$ is isomorphic to $L$.
+\end{proof}
+
+\begin{notation}
+We've seen $\mathbb F_p$ quite many times before. Now that we have the theorem, we define $\mathbb F_{p^n}$ to be the unique field of size $p^n$ (so not $\Z/p^n\Z$ which is generally not a field).
+\end{notation}
+
+\subsection{Frobenius map}
+\begin{defn}
+Let $K$ be a field (not necessarily finite) with $\Char K=p>0$. The \textit{Frobenius map} is the homomorphism $\varphi_p:K\rightarrow K:\alpha\mapsto\alpha^p$.
+\end{defn}
+
+\begin{prop}
+Write $\varphi$ for $\varphi_p$ in context above. Then
+\begin{enumerate}
+\item $\varphi$ is indeed a homomorphism
+\item $M:=\{\alpha\in K:\varphi(\alpha)=\alpha\}=\mathbb F_p$
+\item $K$ is finite $\Rightarrow \varphi$ is surjective, so $\varphi\in\Aut_{\mathbb F_p}(K)$ and $K^\varphi=\mathbb F_p$.
+\end{enumerate}
+\end{prop}
+\begin{proof}
+\begin{enumerate}
+\item One has $(\alpha\beta)^p=\alpha^p\beta^p,\ 1^p=1$ and $(\alpha+\beta)^p=\alpha^p+\beta^p$.
+\item $M$ is a subfield, so $\mathbb F_p\subset M$ and in particular $|M|\geq p$. But $M=\{\text{roots of }x^p-x\in\mathbb F_p[x]\}$, so $|M|\leq p$, hence $|M|=p$ and $M=\mathbb F_p$.
+\item $\varphi$ is surjective by its injectivity ($K$ is a field) and rank–nullity theorem. The rest follows from definition.
+\end{enumerate}
+\end{proof}
+
+\begin{example}
+$K=\mathbb F_3(t)=\left\{ \frac{A}{B}:A,B\in\mathbb F_3[t],\ B\neq 0 \right\}$. Then $\Char K=3$. This is not infinite, and note that $\varphi$ is not surjective (you can't hit $t$).
+\end{example}
+
+\begin{thm}[Galois group]
+Given a finite field $K$ with $\Char K=p>0$ and $|K|=p^n$, one has $\gal(K/\mathbb F_p)=\langle\varphi_p\rangle\cong\Z/n\Z$.
+\end{thm}
+
+\begin{flushright}
+\textit{Week 8, lecture 2 starts here}
+\end{flushright}
+
+\begin{proof}
+Since $K/\mathbb F_p$ is Galois, by \ref{thm:honkhonk} one has $|\gal(K/\mathbb F_p)|=[K:\mathbb F_p]=n$. It suffices to prove $|\varphi_p|=n$. Suppose $\varphi_p^m=\id$ for some $m\leq n$, i.e. $\alpha^{p^m}=\alpha \ \forall\alpha\in K$, i.e. $\alpha$ is a root of $g=x^{p^m}-x$. This means $p^n=|K|\leq p^m$, so $n\leq m$, so $m=n$.
+\end{proof}
+
+\begin{remark}
+Note that any subgroup of $\gal(K/\mathbb F_p)$ is then of the form $\langle\varphi_p^m\rangle$ where $m\mid n$ which has $\frac{n}{m}$ elements. By \ref{coro:degreeequalsizeofG}, $[L:L^H]=|H|=\frac{n}{m}$, so $|L^H|=p^m$ and hence $L^H\cong\mathbb F_{p^m}$. We can therefore draw the subgroup/subfield lattice quite easily.
+\end{remark}
+\begin{example}
+Let $p=7$ and $n=12$.
+
+Subgroup lattice of $\gal(L/\mathbb F_p)\cong C_{12}$:
+\[
+\xymatrix{
+& & \{\id\}=\langle\varphi^{12}\rangle\ar@{-}[dl]\ar@{-}[dr] \\
+& \langle\varphi^6\rangle\cong C_2\ar@{-}[dl]\ar@{-}[dr] & & \langle\varphi^4\rangle\cong C_3\ar@{-}[dl] \\
+\langle\varphi^3\rangle\cong C_4\ar@{-}[dr] & & \langle\varphi^2\rangle\cong C_6\ar@{-}[dl] \\
+& \langle\varphi\rangle\cong C_{12}
+}
+\]
+so by Galois correspondence one has subfield lattice:
+\[
+\xymatrix{
+& & L=\mathbb F_{13841287201}\ar@{-}[dl]\ar@{-}[dr] \\
+& L^{\langle\varphi^6\rangle}=\mathbb F_{117649}\ar@{-}[dl]\ar@{-}[dr] & & L^{\langle\varphi^4\rangle}=\mathbb F_{2401}\ar@{-}[dl] \\
+L^{\langle\varphi^3\rangle}=\mathbb F_{343}\ar@{-}[dr] & & L^{\langle\varphi^2\rangle}=\mathbb F_{49}\ar@{-}[dl] \\
+& L^{\langle\varphi\rangle}=\mathbb F_7
+}
+\]
+which seems insane to derive from scratch but now almost comes for free.
+\end{example}
+
+\begin{flushright}
+\textit{Week 8, lecture 3 starts here}
+\end{flushright}
+
+\section{Radical solution of a polynomial}
+Recall section \ref{sec:cubic}.
+\begin{defn}
+A field extension $M/K$ is \textit{radical} if $\exists$ a sequence of subfields $K=F_0\subset F_1\subset F_2\subset\cdots\subset F_s=M$ with $F_i=F_{i-1}(\alpha_i)$ and $\alpha_i^{n_i}\in F_{i-1}$.
+\end{defn}
+
+\begin{example}
+Let $\omega^3=1,\ \omega\neq 1$. Then $\Q(\omega)/\Q$ is radical, since $\omega$ is a root of $x^3-1\in\Q[x]$.
+\end{example}
+
+\begin{example}
+$f=x^3-3x-3\in\Q[x]$ is Eisenstein at 3 so irreducible. The discriminant $D$ is
+\[
+q^2+\frac{4p^3}{27}=9+\frac{4(-27)}{27}=5.
+\]
+Let $\alpha=\sqrt5,\ \beta=\sqrt[3]{\frac{-q+\alpha}{2}}=\sqrt[3]{\frac{3+\sqrt5}{2}}$ and $\gamma=\sqrt[3]{\frac{3-\sqrt5}{2}}$, subject to $\beta\gamma=-\frac{p}3=1$. Choose $\beta,\gamma\in\R$ and one has $\gamma=\frac{1}{\beta}$. Roots of $f$ are $\alpha_0=\beta+\gamma,\ \alpha_1=\omega\beta+\omega^2\gamma,\ \alpha_2=\omega^2\beta+\omega\gamma=\overline{\alpha_1}$. Splitting field is $\Q(\alpha_0,\alpha_1,\alpha_2)$. Note that one has
+\[
+\begin{aligned}
+F_0=\Q&\subset F_1=\Q(\sqrt5)\\
+&\subset F_2=\Q(\sqrt5,\beta)\\
+&\subset F_3=\Q(\beta,\omega)=:M,
+\end{aligned}
+\]
+so $M/\Q$ is radical since
+\[
+5\in\Q,\quad \frac{3+\sqrt5}{2}\in\Q(\sqrt5),\quad 1\in \Q(\sqrt5,\beta).
+\]
+Now we know if $L/\Q$ is a splitting field then $[L:\Q]=3$ or 6 and $L\subset M$. We claim that $[F_2:F_1]=3$, since
+\[
+\xymatrix{
+F_3\ar@{=}[r]\ar@{-}[d]_2 & M\ar@{-}[d]\ar@/^2pc/@{-}[ddd]^{\text{divisible by }3} \\
+F_2\ar@{-}[d]_{\text{at most }3} & L\ar@{-}[dd]_{3\text{ or }6} \\
+F_1\ar@{-}[d]_2 \\
+F_0\ar@{=}[r] & \Q.
+}
+\]
+So in particular $[M:\Q]=12$ hence $L\subsetneqq M$. In fact, $\sqrt5,\beta,\gamma,\omega\notin L$.
+\end{example}
+
+\begin{defn}
+$L/K$ is \textit{soluble} if $\exists M/K$ radical with $L\subset M$.
+
+A polynomial $f\in K[x]$ is \textit{soluble by radicals} if its splitting field $L/K$ is soluble.
+\end{defn}
+
+\begin{prop}
+Suppose $\Char K=0$ and $L/K$ radical. Then $\exists$ a finite extension $M/L:M/K$ is radical and Galois.
+
+Compare this with \ref{coro:normalclosure}.
+\end{prop}
+\begin{proof}
+Let $M/L$ be normal closure. One has
+\[
+K=F_0\subset F_1\subset F_2\subset\cdots\subset F_s=L
+\]
+with $F_i=F_{i-1}(\alpha_i)$ where $\alpha_i$ is a root of $x^{n_i}-b_i\in F_{i-1}[x]$. Let $m_i$ be minimal polynomial of $\alpha_i$ over $K$.
+
+Let $\widetilde{F_i}=F_{i-1}(\text{roots of }m_i)\subset M$ (so $\widetilde{F_1}/K$ is normal since it's a splitting field).
+
+$b_1\in K$ so it's fixed by $\gal(M/K).\ m_1$ is irreducible over $K$ so if $\beta_1$ is another root, $\exists\sigma\in\gal(M/K):\sigma(\alpha_1)=\beta_1$, so $\beta_1$ is a root of $x^{n_1}-\sigma(b_1)=x^{n_1}-b_1$, hence $\beta_1$ is a radical, i.e. $\widetilde{F_1}/K$ is radical.
+
+Now let $\beta_2$ be a another root of $m_2$. Then $\exists\sigma\in\gal(M/K):\sigma(\alpha_2)=\beta_2$, and $\alpha_2$ is a root of $x^{n_2}-b_2\in F_1[x]\subset \widetilde{F_1}[x];\ \beta_2$ is a root of $x^{n_2}-\sigma(b_2)\in\widetilde{F_1}[x]$ since $\widetilde{F_1}/K$ is normal and so $b_2\in\widetilde{F_1}$ by \ref{prop:autFixNormal}. Hence $\beta_2$ is a radical, i.e. $\widetilde{F_2}/K$ is radical.
+
+The proof is finished by induction and definition of normal closure.
+\end{proof}
+
+\begin{flushright}
+\textit{Week 9, lecture 1 starts here}
+\end{flushright}
+
+\begin{defn}
+A group $G$ is \textit{soluble} if $\exists$ a chain of subgroups
+\[
+\{\id\}\subset G_0\subset G_1\subset \cdots \subset G_s=G
+\]
+with each $G_i\subset G_{i+1}$ being normal subgroups (called a \textit{subnormal series}) and $G_{i+1}/G_i$ abelian $\forall i=0,\ldots,s-1$.
+\end{defn}
+
+\begin{remark}
+When $G$ is finite and soluble, there is a subnormal series with all quotients being cyclic of prime order since we know structure of finite abelian groups.
+\end{remark}
+
+\begin{defn}
+For $g,h\in G$, the \textit{commutator} of $g,h$ is $[g,h]=ghg^{-1}h^{-1}$.
+\end{defn}
+
+\begin{example}
+Abelian groups are soluble.
+
+$S_3, S_4$ are soluble. $S_5$ is not, and in fact $A_5$ is already not since it's simple and nonabelian.
+
+Every element of $A_5=\{\id,(i,j,k),(i,j)(k,l),(i,j,k,l,m)\}$ is a commutatator. Indeed,
+\[
+\begin{aligned}
+(i,j,k)&=[(i,k,l),(i,k,m)] \\
+(i,j)(k,l)&=[(i,j,k),(i,j,l)] \\
+(i,j,k,l,m)&=[(i,j)(k,m)(i,m,l)]. \\
+\end{aligned}
+\]
+Now suppose $A_5$ is soluble with $H$ normal and $A_5/H$ abelian and forget we know it's simple. Then $\exists\text{ a homomorphism }\pi:A_5\twoheadrightarrow A_5/H$, but commutators are mapped to commutators by homomorphisms, and since $A_5/H$ is abelian, it's trivial, i.e. $H=A_5$.
+\end{example}
+
+\begin{prop}
+Let $G$ be a group and $H\subset G$ a subgroup.
+\begin{enumerate}
+\item $G$ soluble $\Rightarrow$ $H$ soluble.
+\item If $H$ is normal, then $G$ soluble $\Leftrightarrow H$ and $G/H$ soluble.
+\end{enumerate}
+\end{prop}
+
+\begin{example}
+$f=x^5-10x+5$ is not soluble by radicals.
+
+$f$ is irreducible since it's Eisenstein at $p=5$ (so it's separable). We claim it has 3 distinct real roots and a complex conjugate pair of roots. Note that $f'=5x^4-10=5(x^4-2)$ has two real roots $\pm\sqrt[4]2$ (and two imaginary roots $\pm i\sqrt[4]2$), and that $f(-\sqrt[4]2)>0,\ f(\sqrt[4]2)<0$, so by IVT and MVT we have three real roots. We have the complex conjugates since $f\in\Q[x]$. Name them $\alpha_1,\alpha_2,\alpha_3\in\R,\ \beta,\overline\beta\in\C\backslash\R$ and one has splitting field $L=\Q(\alpha_1,\alpha_2,\alpha_3,\beta,\overline\beta)$.
+
+Complex conjugation $\sigma(z)=\overline z$ is an automorphism of $L$, so $\sigma\in\gal(L/\Q)=\gal(f)$, which corresponds to $(4,5)\in S_5$.
+
+Now by tower law and Galois correspondence, 5 divides $\gal(L/\Q)$, which divides $120=|S_5|$ by Lagrange's and Lemma \ref{lemma:irredthengalcongtrans}. So $5^2\nmid\gal(L/\Q)$, and there is a 5 cycle in $\gal(L/\Q)$.
+
+But $S_5$ is generated by $(4,5)$ and a 5-cycle, so $\gal(L/\Q)\cong S_5$, a not soluble group.
+\end{example}
+
+\begin{flushright}
+\textit{Week 9, lecture 2 starts here}
+\end{flushright}
+
+\begin{lemma}
+\label{lemma:KzetaKgalabel}
+$K\subset\C,\ \zeta\in\C$ a primitive $p$th root of 1 where $p$ prime. Then $K(\zeta)/K$ is Galois and $\gal(K(\zeta)/K)$ is abelian.
+\end{lemma}
+\begin{proof}
+$K(\zeta)$ is a splitting field of the minimal polynomial of $\zeta$, which is separable since it divides $x^p-1$ which has $p$ roots $1,\zeta,\zeta^2,\ldots,\zeta^{p-1}$. Hence $K(\zeta)/K$ is Galois.
+
+If $\sigma,\tau\in\gal(K(\zeta)/K)$ then we know $\sigma(\zeta)=\zeta^r$ and $\tau(\zeta)=\zeta^s$ for some $r,s\in\{1,\ldots,p-1\}$, so $\tau(\sigma(\zeta))=\sigma(\tau(\zeta))=\zeta^{rs}$.
+\end{proof}
+
+\begin{lemma}
+\label{lemma:KalphaKgalabel}
+Suppose $\zeta\in K\subset\C$ where $\zeta$ is a primitive $p$th root of 1 where $p$ prime. If $\alpha\in\C$ satisfies $\alpha^p=a\in K$ then $K(\alpha)/K$ is Galois and $\gal(K(\alpha)/K)$ is abelian.
+\end{lemma}
+\begin{proof}
+$K(\alpha)$ is a splitting field of $f=x^p-a\in K[x]$ where $f$ is separable with roots $\alpha,\alpha\zeta,\alpha\zeta^2,\ldots,\alpha\zeta^{p-1}$, so $K(\alpha)/K$ is Galois.
+
+Minimal polynomial $m$ of $\alpha$ over $K$ divides $f$ so $m$ splits in $K(\alpha)$ with roots of the form $\alpha\zeta^s$. Again elements of $\gal(K(\alpha)/K)$ are determined by these roots, and if $\sigma(\alpha)=\alpha\zeta^s$ and $\tau(\alpha)=\alpha\zeta^r$ then $\sigma(\tau(\alpha))=\sigma(\alpha\zeta^r)=\sigma(\alpha)\sigma(\zeta)^r=\alpha\zeta^s\zeta^r=\alpha\zeta^{r+s}$ and the result follows from the fact that $r+s=s+r$.
+\end{proof}
+
+\begin{coro}
+$K\subset\C,\ \alpha\in\C$ satisfies $\alpha^p=a\in K$ where $p$ prime. Let $L=K(\alpha,\zeta)$ and $M=K(\zeta)$. Then $L/K$ is Galois and $\gal(L/K)$ is soluble with $\{\id\}\subset\gal(L/M)\subset \gal(L/K)$ a soluble series.
+\end{coro}
+\begin{proof}
+$K(\alpha,\zeta)$ is a splitting field of $f=x^p-a$ which has roots $\alpha,\alpha\zeta,\ldots,\alpha\zeta^{p-1}$, so $L/K$ is Galois. Also $M/K$ is Galois by \label{lemma:KzetaKgalabel}, so normal, so $\gal(L/M)\lhd\gal(L/K)$ with $\gal(L/K)/\gal(L/M)\cong\gal(M/K)$ by \ref{thm:galoiscorr}, which is abelian by \label{lemma:KzetaKgalabel}. $\gal(L/M)$ is abelian by \ref{lemma:KalphaKgalabel}.
+\end{proof}
+
+\begin{thm}
+If $L/K$ is radical Galois then $\gal(L/K)$ is soluble.
+\end{thm}
+\begin{coro}
+$K\subset \C$ and $f\in K[x]$ irreducible with splitting field $L/K$. If $f$ is soluble in radicals then $\gal(L/K)$ is soluble.
+\end{coro}
+
+For proofs of the above two, see Gavin's notes.
+
+\begin{flushright}
+\textit{Week 9, lecture 3, week 10, lectures 1 and 2 are cancelled}
+\end{flushright}
+
+\begin{flushright}
+\textit{Week 10, lecture 3 is an overview}
+\end{flushright}
+
+\end{document}
